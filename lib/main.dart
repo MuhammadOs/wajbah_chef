@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wajbah_chef/features/Home/presentation/view/home_body.dart';
 import 'package:wajbah_chef/features/OnBoarding/presentations/view/onboarding.dart';
 
 void main() {
@@ -13,9 +14,10 @@ class WajbahChef extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(fontFamily: "Biryani"),
       debugShowCheckedModeBanner: false,
-      home: const OnBoardingScreen(),
+      home: const HomeScreenView(),
       routes: {
         "Onboarding": (context) => const OnBoardingScreen(),
+        "Home": (context) => const HomeScreenView(),
       },
     );
   }
