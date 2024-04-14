@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ri.dart';
+import 'package:iconify_flutter/icons/tabler.dart';
 
 import '../constants/constants.dart';
 
@@ -17,10 +20,14 @@ class CustomBackButton extends StatelessWidget {
           height: 35,
           width: 35,
           decoration: BoxDecoration(
-              color: wajbah_buttons, borderRadius: BorderRadius.circular(10)),
-          child: const Icon(
-            Icons.keyboard_arrow_left,
-            size: 28,
+              color: wajbah_primary, borderRadius: BorderRadius.circular(23)),
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Iconify(
+              Ri.arrow_go_back_fill,
+              size: 15,
+              color: wajbah_white,
+            ),
           )),
     );
   }

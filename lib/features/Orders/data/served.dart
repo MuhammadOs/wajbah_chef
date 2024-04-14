@@ -1,4 +1,4 @@
-class Request {
+class Served {
   late String Request_ID;
   late String Item_name;
   late int num_of_items;
@@ -8,7 +8,7 @@ class Request {
   late String Available_time;
   late String Request_condition;
   late String Phone_number;
-  Request(
+  Served(
       {required this.Request_ID,
       required this.Item_name,
       required this.num_of_items,
@@ -20,8 +20,8 @@ class Request {
       required this.Phone_number});
 }
 
-List<Request> Requests_data = [
-  Request(
+List<Served> Served_data = [
+  Served(
       Request_ID: '2343546',
       Item_name: 'BBQ Pizza',
       num_of_items: 1,
@@ -31,14 +31,4 @@ List<Request> Requests_data = [
       Available_time: '0:05',
       Request_condition: 'Available',
       Phone_number: '01061997059'),
-  Request(
-      Request_ID: '2543542',
-      Item_name: 'Shawarma Double',
-      num_of_items: 2,
-      Requester_name: 'Mohamed Osama',
-      Requester_location: 'Tahrir Square , Sphinx',
-      Item_price: 350,
-      Available_time: '2:45',
-      Request_condition: 'Expired',
-      Phone_number: '01222777122'),
 ];
