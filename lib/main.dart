@@ -6,6 +6,7 @@ import 'features/Authentication/presentations/views/signup_view/register_view.da
 import 'features/Authentication/presentations/views/signup_view/signup_view.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/home_body.dart';
 import 'package:wajbah_chef/features/OnBoarding/presentations/view/onboarding.dart';
+import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
 
 void main() {
   runApp(const WajbahChef());
@@ -17,17 +18,13 @@ class WajbahChef extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          fontFamily: "Biryani",
-          primaryColor: wajbah_primary,
-          backgroundColor: Colors.white),
+      theme: ThemeData(fontFamily: "Biryani"),
       debugShowCheckedModeBanner: false,
       home: const HomeScreenView(),
       routes: {
         "Onboarding": (context) => const OnBoardingScreen(),
         "Home": (context) => const HomeScreenView(),
-      home: MultiStepRegistration(),
-      routes: {
+        "Orders": (context) => const OrdersView(),
         "login": (context) => const LoginView(),
         "register": (context) => const MultiStepRegistration(),
       },
