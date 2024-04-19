@@ -77,7 +77,6 @@ class _RequestsListItemState extends State<RequestsListItem> {
         '${_duration.inMinutes.remainder(60)}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}';
 
     return Container(
-      height: widget.height * 0.3,
       width: widget.width * 0.8,
       decoration: BoxDecoration(
         color: _duration.inSeconds == 0 && _duration.inMinutes == 0
@@ -86,8 +85,9 @@ class _RequestsListItemState extends State<RequestsListItem> {
         borderRadius: BorderRadius.circular(23),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -163,8 +163,7 @@ class _RequestsListItemState extends State<RequestsListItem> {
                     style: Styles.titleMedium.copyWith(fontSize: 18),
                   ),
                   Container(
-                    width: widget.width * 0.18,
-                    height: widget.height * 0.04,
+                    padding: EdgeInsets.symmetric(horizontal: widget.width * 0.02, vertical: widget.height * 0.005),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(23),
                       color: _duration.inMinutes > 5

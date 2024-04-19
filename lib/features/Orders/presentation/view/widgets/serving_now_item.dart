@@ -79,7 +79,7 @@ class _ServingListItemState extends State<ServingListItem> {
         '${_duration.inMinutes.remainder(60)}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}';
 
     return Container(
-      height: widget.height * 0.365,
+      height: widget.height * 0.32,
       width: widget.width * 0.8,
       decoration: BoxDecoration(
         color: wajbah_white,

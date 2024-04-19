@@ -47,8 +47,6 @@ class _OrdersBodyState extends State<OrdersBody>
             child: TabBarView(
               controller: _tabController,
               children: [
-                // Content for Serving Now Tab
-
                 ListView.builder(
                     scrollDirection: Axis.vertical,
                     itemCount: Serving_data.length,
@@ -69,8 +67,6 @@ class _OrdersBodyState extends State<OrdersBody>
                             Available_time: Serving_data[index].Available_time),
                       );
                     }),
-
-                // Content for Served Tab
                 ListView.builder(
                     scrollDirection: Axis.vertical,
                     itemCount: Served_data.length,

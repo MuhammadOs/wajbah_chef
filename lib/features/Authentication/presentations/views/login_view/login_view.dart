@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wajbah_chef/features/home/presentation/view/home_body.dart';
 import '../../../../../core/constants/constants.dart';
 import '../../../../../core/sizeConfig.dart';
 import '../../../../../core/styles.dart';
@@ -259,7 +260,7 @@ class _LoginViewState extends State<LoginView> {
                                   debugPrint(passwordController.text);
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (c) {
-                                      return const Text("Home");
+                                      return const HomeScreenView();
                                     },
                                   ));
                                 }

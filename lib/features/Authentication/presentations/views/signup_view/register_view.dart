@@ -1,7 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/line_md.dart';
+import 'package:iconify_flutter/icons/prime.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
+import 'package:wajbah_chef/features/Authentication/presentations/views/login_view/login_view.dart';
 import 'dart:io';
 import '../../../../../core/constants/constants.dart';
 import '../../../../../core/sizeConfig.dart';
@@ -10,15 +15,28 @@ import '../widgets/custom_text_field.dart';
 import '../widgets/password_text_field.dart';
 
 class MultiStepRegistration extends StatefulWidget {
-  const MultiStepRegistration({super.key});
+  const MultiStepRegistration({Key? key}) : super(key: key);
 
   @override
   State<MultiStepRegistration> createState() => _MultiStepRegistrationState();
 }
 
 class _MultiStepRegistrationState extends State<MultiStepRegistration> {
-  var usernameController = TextEditingController();
+  var firstnameController = TextEditingController();
+  var lastnameController = TextEditingController();
+  var nationalIdController = TextEditingController();
+  var cityController = TextEditingController();
+  var streetController = TextEditingController();
+  var buildingController = TextEditingController();
+  var floorController = TextEditingController();
+  var flatController = TextEditingController();
+  var emailController = TextEditingController();
+  var phoneNumberController = TextEditingController();
   var passwordController = TextEditingController();
+  var rePasswordController = TextEditingController();
+  var bankAccountController = TextEditingController();
+  var kitchenController = TextEditingController();
+  var descriptionController = TextEditingController();
   var personalFormKey = GlobalKey<FormState>();
   var securityFormKey = GlobalKey<FormState>();
   var profileFormKey = GlobalKey<FormState>();
@@ -42,7 +60,15 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
   continueStep() {
     if (currentStep < 2) {
       setState(() {
-        currentStep = currentStep + 1; //currentStep+=1;
+        currentStep = currentStep + 1;
+      });
+    } else if (currentStep == 2) {
+      setState(() {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (c) {
+            return const LoginView();
+          },
+        ));
       });
     }
   }
@@ -64,14 +90,17 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
   Widget controlBuilders(context, details) {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
+    double height = SizeConfig.screenH!;
+    double defaultPadding = SizeConfig.defaultPadding!;
+    double fontSize = SizeConfig.fontSize!;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(defaultPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SizedBox(
             width: width * 0.15,
-            height: 60,
+            height: height * 0.05,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 elevation: 0,
@@ -83,7 +112,8 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                 splashFactory: NoSplash.splashFactory,
               ),
               onPressed: details.onStepCancel,
-              child: const Center(
+              child: const Align(
+                alignment: Alignment.centerLeft,
                 child: Icon(
                   Icons.arrow_back,
                   color: Colors.white,
@@ -93,7 +123,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
           ),
           SizedBox(
             width: width * 0.6,
-            height: 60,
+            height: height * 0.05,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 elevation: 0,
@@ -106,11 +136,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
               ),
               onPressed: details.onStepContinue,
               child: const Align(
-                  alignment: Alignment.centerRight,
-                  child: Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
-                  )),
+                alignment: Alignment.centerRight,
+                child: Icon(
+                  Icons.arrow_forward,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ],
@@ -141,15 +172,22 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
+    double height = SizeConfig.screenH!;
+    double defaultPadding = SizeConfig.defaultPadding!;
+    double fontSize = SizeConfig.fontSize!;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(defaultPadding * 2),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Login',
-                  style: Styles.titleMedium.copyWith(color: wajbah_black)),
+              const SizedBox(height: 15,),
+              CustomAppBar(
+                title: "Register",
+                showBackButton: false,
+              ),
               Expanded(
                 flex: 9,
                 child: Stepper(
@@ -163,220 +201,124 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                   currentStep: currentStep,
                   steps: [
                     Step(
-                        title: const Text('Personal'),
-                        content: SingleChildScrollView(
-                          child: Center(
-                            child: Form(
-                              key: personalFormKey,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(
-                                    height: 40.0,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: CustomTextField(
-                                          usernameController:
-                                              usernameController,
-                                          hintText: "First name",
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          usernameController:
-                                              usernameController,
-                                          hintText: "Last name",
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      _selectDate(context);
-                                    },
-                                    child: AbsorbPointer(
+                      title: const Text('Personal'),
+                      content: SingleChildScrollView(
+                        child: Center(
+                          child: Form(
+                            key: personalFormKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: height * 0.05,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
                                       child: CustomTextField(
-                                        usernameController:
-                                            _birthdateController,
-                                        hintText: "Birthdate",
+                                        usernameController: firstnameController,
+                                        hintText: "First name",
                                       ),
                                     ),
-                                  ),
-                                  /*CustomTextField(
-                                    usernameController: usernameController,
-                                    hintText: "Birthdate",
-                                  ),*/
-                                  const SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  CustomTextField(
-                                    usernameController: usernameController,
-                                    hintText: "National ID",
-                                  ),
-                                  const SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: CustomTextField(
-                                          usernameController:
-                                              usernameController,
-                                          hintText: "City",
-                                        ),
+                                    SizedBox(
+                                      width: width * 0.02,
+                                    ),
+                                    Expanded(
+                                      child: CustomTextField(
+                                        usernameController: lastnameController,
+                                        hintText: "Last name",
                                       ),
-                                      const SizedBox(
-                                        width: 10,
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _selectDate(context);
+                                  },
+                                  child: AbsorbPointer(
+                                    child: CustomTextField(
+                                      usernameController: _birthdateController,
+                                      hintText: "Birthdate",
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                CustomTextField(
+                                  usernameController: nationalIdController,
+                                  hintText: "National ID",
+                                ),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: CustomTextField(
+                                        usernameController: cityController,
+                                        hintText: "City",
                                       ),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          usernameController:
-                                              usernameController,
-                                          hintText: "Street",
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: CustomTextField(
-                                          usernameController:
-                                              usernameController,
-                                          hintText: "Building no.",
-                                        ),
+                                    ),
+                                    SizedBox(
+                                      width: width * 0.02,
+                                    ),
+                                    Expanded(
+                                      child: CustomTextField(
+                                        usernameController: streetController,
+                                        hintText: "Street",
                                       ),
-                                      const SizedBox(
-                                        width: 10,
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: CustomTextField(
+                                        usernameController: buildingController,
+                                        hintText: "Building no.",
                                       ),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          usernameController:
-                                              usernameController,
-                                          hintText: "Floor no.",
-                                        ),
+                                    ),
+                                    SizedBox(
+                                      width: width * 0.02,
+                                    ),
+                                    Expanded(
+                                      child: CustomTextField(
+                                        usernameController: floorController,
+                                        hintText: "Floor no.",
                                       ),
-                                      const SizedBox(
-                                        width: 10,
+                                    ),
+                                    SizedBox(
+                                      width: width * 0.02,
+                                    ),
+                                    Expanded(
+                                      child: CustomTextField(
+                                        usernameController: flatController,
+                                        hintText: "Flat no.",
                                       ),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          usernameController:
-                                              usernameController,
-                                          hintText: "Flat no.",
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  /*PasswordTextField(
-                                    passwordController: passwordController,
-                                    isPassword: isPassword,
-                                    onPressed: () {
-                                      setState(() {
-                                        isPassword = !isPassword;
-                                      });
-                                    },
-                                    hintText: "Password",
-                                  ),
-                                  const SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  PasswordTextField(
-                                    passwordController: passwordController,
-                                    isPassword: isPassword,
-                                    onPressed: () {
-                                      setState(() {
-                                        isPassword = !isPassword;
-                                      });
-                                    },
-                                    hintText: "Re-enter password",
-                                  ),
-                                  const SizedBox(
-                                    height: 10.0,
-                                  ),
-                                  CustomTextField(
-                                    usernameController: usernameController,
-                                    hintText: "Referral code (optional)",
-                                  ),*/
-                                  const SizedBox(
-                                    height: 40.0,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                          flex: 1,
-                                          child: Checkbox(
-                                              value: true,
-                                              onChanged: (value) {})),
-                                      Expanded(
-                                        flex: 10,
-                                        child: Text(
-                                            'I agree to the Terms & Conditions and Privacy Policy',
-                                            textAlign: TextAlign.center,
-                                            style: Styles.hint
-                                                .copyWith(fontSize: 12)),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  /*Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          width: width * 0.7,
-                                          height: 60,
-                                          child: CustomButton(
-                                            color: wajbah_primary,
-                                            text: "Create Account",
-                                            onPressed: () {
-                                              setState(() {
-                                                if (formkey.currentState!
-                                                    .validate()) {
-                                                  debugPrint(
-                                                      passwordController
-                                                          .text);
-                                                  Navigator.of(context)
-                                                      .push(MaterialPageRoute(
-                                                    builder: (c) {
-                                                      return const AllowNotification();
-                                                    },
-                                                  ));
-                                                }
-                                              });
-                                            },
-                                          )),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),*/
-                                ],
-                              ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: height * 0.08,
+                                )
+                              ],
                             ),
                           ),
                         ),
-                        isActive: currentStep >= 0,
-                        state: currentStep >= 0
-                            ? StepState.complete
-                            : StepState.disabled),
+                      ),
+                      isActive: currentStep >= 0,
+                      state: currentStep >= 1
+                          ? StepState.complete
+                          : StepState.disabled,
+                    ),
                     Step(
                       title: const Text('Security'),
                       content: SingleChildScrollView(
@@ -387,22 +329,22 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(
-                                  height: 40.0,
+                                SizedBox(
+                                  height: height * 0.05,
                                 ),
                                 CustomTextField(
-                                  usernameController: usernameController,
+                                  usernameController: emailController,
                                   hintText: "Email",
                                 ),
-                                const SizedBox(
-                                  height: 20.0,
+                                SizedBox(
+                                  height: height * 0.02,
                                 ),
                                 CustomTextField(
-                                  usernameController: usernameController,
+                                  usernameController: phoneNumberController,
                                   hintText: "Phone number",
                                 ),
-                                const SizedBox(
-                                  height: 20.0,
+                                SizedBox(
+                                  height: height * 0.02,
                                 ),
                                 PasswordTextField(
                                   passwordController: passwordController,
@@ -414,11 +356,11 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                   },
                                   hintText: "Password",
                                 ),
-                                const SizedBox(
-                                  height: 10.0,
+                                SizedBox(
+                                  height: height * 0.01,
                                 ),
                                 PasswordTextField(
-                                  passwordController: passwordController,
+                                  passwordController: rePasswordController,
                                   isPassword: isPassword,
                                   onPressed: () {
                                     setState(() {
@@ -427,77 +369,23 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                   },
                                   hintText: "Re-enter password",
                                 ),
-                                const SizedBox(
-                                  height: 10.0,
+                                SizedBox(
+                                  height: height * 0.01,
                                 ),
                                 CustomTextField(
-                                  usernameController: usernameController,
+                                  usernameController: bankAccountController,
                                   hintText: "Bank account",
                                 ),
-                                const SizedBox(
-                                  height: 40.0,
+                                SizedBox(
+                                  height: height * 0.1,
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                        flex: 1,
-                                        child: Checkbox(
-                                            value: true,
-                                            onChanged: (value) {})),
-                                    Expanded(
-                                      flex: 10,
-                                      child: Text(
-                                          'I agree to the Terms & Conditions and Privacy Policy',
-                                          textAlign: TextAlign.center,
-                                          style: Styles.hint
-                                              .copyWith(fontSize: 12)),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 20.0,
-                                ),
-                                /*Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          width: width * 0.7,
-                                          height: 60,
-                                          child: CustomButton(
-                                            color: wajbah_primary,
-                                            text: "Create Account",
-                                            onPressed: () {
-                                              setState(() {
-                                                if (formkey.currentState!
-                                                    .validate()) {
-                                                  debugPrint(
-                                                      passwordController
-                                                          .text);
-                                                  Navigator.of(context)
-                                                      .push(MaterialPageRoute(
-                                                    builder: (c) {
-                                                      return const AllowNotification();
-                                                    },
-                                                  ));
-                                                }
-                                              });
-                                            },
-                                          )),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),*/
                               ],
                             ),
                           ),
                         ),
                       ),
                       isActive: currentStep >= 0,
-                      state: currentStep >= 1
+                      state: currentStep >= 2
                           ? StepState.complete
                           : StepState.disabled,
                     ),
@@ -518,27 +406,25 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     clipBehavior: Clip.none,
                                     children: [
                                       Container(
-                                        height: 150,
-                                        width: 150,
+                                        height: height * 0.2,
+                                        width: height * 0.2,
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                              BorderRadius.circular(15),
                                           border: Border.all(
                                               color: Colors.transparent),
                                           color: wajbah_gray_light,
                                         ),
                                         child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: _profileImage != null
-                                              ? Image.file(
-                                                  _profileImage!,
-                                                  fit: BoxFit.cover,
-                                                )
-                                              : const Icon(Icons.person,
-                                                  size: 80,
-                                                  color: Colors.white),
-                                        ),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            child: _profileImage != null
+                                                ? Image.file(
+                                                    _profileImage!,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.asset(
+                                                    "assets/images/authentication/chef_image.png")),
                                       ),
                                       Positioned(
                                         bottom: -8.0,
@@ -567,8 +453,10 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                                           child: const Text(
                                                               'Take a Picture'),
                                                         ),
-                                                        const SizedBox(
-                                                            height: 20),
+                                                        SizedBox(
+                                                          height: SizeConfig
+                                                              .defaultPadding,
+                                                        ),
                                                         GestureDetector(
                                                           onTap: () {
                                                             _pickImage(
@@ -589,12 +477,13 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                             );
                                           },
                                           child: Container(
-                                            padding: const EdgeInsets.all(8.0),
+                                            padding:
+                                                EdgeInsets.all(defaultPadding),
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .primaryColor,
                                               borderRadius:
-                                                  BorderRadius.circular(10),
+                                                  BorderRadius.circular(15),
                                             ),
                                             child: const Icon(
                                               Icons.camera_alt,
@@ -606,83 +495,57 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 40.0,
+                                SizedBox(
+                                  height: height * 0.05,
                                 ),
                                 CustomTextField(
-                                  usernameController: usernameController,
+                                  usernameController: kitchenController,
                                   hintText: "Kitchen name",
                                 ),
-                                const SizedBox(
-                                  height: 20.0,
+                                SizedBox(
+                                  height: height * 0.02,
                                 ),
                                 CustomTextField(
-                                  usernameController: usernameController,
+                                  usernameController: descriptionController,
                                   hintText: "Description",
                                 ),
-                                const SizedBox(
-                                  height: 40.0,
+                                SizedBox(
+                                  height: height * 0.05,
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Expanded(
-                                        flex: 1,
-                                        child: Checkbox(
-                                            value: true,
-                                            onChanged: (value) {})),
+                                      flex: 1,
+                                      child: Checkbox(
+                                        value: true,
+                                        onChanged: (value) {},
+                                      ),
+                                    ),
                                     Expanded(
                                       flex: 10,
                                       child: Text(
-                                          'I agree to the Terms & Conditions and Privacy Policy',
-                                          textAlign: TextAlign.center,
-                                          style: Styles.hint
-                                              .copyWith(fontSize: 12)),
+                                        'I agree to the Terms & Conditions and Privacy Policy',
+                                        textAlign: TextAlign.center,
+                                        style: Styles.hint
+                                            .copyWith(fontSize: fontSize),
+                                      ),
                                     ),
                                   ],
                                 ),
-                                /*Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          width: width * 0.7,
-                                          height: 60,
-                                          child: CustomButton(
-                                            color: wajbah_primary,
-                                            text: "Create Account",
-                                            onPressed: () {
-                                              setState(() {
-                                                if (formkey.currentState!
-                                                    .validate()) {
-                                                  debugPrint(
-                                                      passwordController
-                                                          .text);
-                                                  Navigator.of(context)
-                                                      .push(MaterialPageRoute(
-                                                    builder: (c) {
-                                                      return const AllowNotification();
-                                                    },
-                                                  ));
-                                                }
-                                              });
-                                            },
-                                          )),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),*/
+                                SizedBox(
+                                  height: height * 0.097,
+                                ),
                               ],
                             ),
                           ),
                         ),
                       ),
                       isActive: currentStep >= 0,
-                      state: currentStep >= 2
+                      state: currentStep >= 3
                           ? StepState.complete
-                          : StepState.disabled,
+                          : StepState.editing,
                     ),
                   ],
                 ),
@@ -693,7 +556,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                   Text(
                     'Already have an account ?',
                     style: Styles.titleSmall
-                        .copyWith(color: wajbah_gray, fontSize: 14),
+                        .copyWith(color: wajbah_gray, fontSize: fontSize),
                   ),
                   TextButton(
                     onPressed: () {
@@ -702,15 +565,14 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.transparent,
                     ),
-                    child: Text('Login',
-                        style: Styles.titleSmall
-                            .copyWith(color: wajbah_primary, fontSize: 14)),
+                    child: Text(
+                      'Login',
+                      style: Styles.titleSmall
+                          .copyWith(color: wajbah_primary, fontSize: fontSize),
+                    ),
                   ),
                 ],
               ),
-              const Spacer(
-                flex: 1,
-              )
             ],
           ),
         ),
