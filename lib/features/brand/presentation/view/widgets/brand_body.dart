@@ -7,6 +7,8 @@ import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/sizeConfig.dart';
 import 'package:wajbah_chef/core/styles.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
+import 'package:wajbah_chef/features/brand/data/brand_data.dart';
+import 'package:wajbah_chef/features/brand/presentation/view/widgets/bar_chart_widget.dart';
 import 'package:wajbah_chef/features/brand/presentation/view/widgets/brand_tabbar.dart';
 
 class BrandBody extends StatefulWidget {
@@ -20,11 +22,17 @@ class _BrandBodyState extends State<BrandBody>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late String _dropdownvalue = 'Reviews Report';
+  late int _selectedTabIndex = 2;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
     _dropdownvalue = 'Reviews Report';
+    _tabController.addListener(() {
+      setState(() {
+        _selectedTabIndex = _tabController.index;
+      });
+    });
   }
 
   @override
@@ -60,10 +68,10 @@ class _BrandBodyState extends State<BrandBody>
                     ],
                   ),
                   SizedBox(
-                    height: height * 0.01,
+                    height: height * 0.03,
                   ),
                   Container(
-                      height: height * 0.365,
+                      height: height * 0.5,
                       width: width * 0.9,
                       decoration: BoxDecoration(
                         color: wajbah_white,
@@ -119,9 +127,12 @@ class _BrandBodyState extends State<BrandBody>
                                 ],
                               ),
                             ),
+                            BarChartSample2(
+                              tabIndex: _selectedTabIndex,
+                            ),
                           ],
                         ),
-                      ))
+                      )),
                 ],
               ),
             ),
