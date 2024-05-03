@@ -1,14 +1,11 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'features/Authentication/presentations/views/login_view/login_view.dart';
-import 'features/Authentication/presentations/views/signup_view/register_view.dart';
+import 'package:wajbah_chef/features/Dashboard/presentation/view/dashboard_view.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/home_body.dart';
 import 'package:wajbah_chef/features/OnBoarding/presentations/view/onboarding.dart';
 import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
 
 void main() {
-  runApp(
-      const WajbahChef());
+  runApp(const WajbahChef());
 }
 
 class WajbahChef extends StatelessWidget {
@@ -22,7 +19,7 @@ class WajbahChef extends StatelessWidget {
         canvasColor: Colors.white
       ),
       debugShowCheckedModeBanner: false,
-      home: const OnBoardingScreen(),
+      home: const BrandView(),
       routes: {
         "onboarding": (context) => const OnBoardingScreen(),
         "home": (context) => const HomeScreenView(),
