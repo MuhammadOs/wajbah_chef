@@ -6,6 +6,10 @@ import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
 import 'package:wajbah_chef/features/brand/presentation/view/brand_view.dart';
 import 'package:wajbah_chef/features/market/presentation/view/market_view.dart';
 
+import 'features/Authentication/presentations/views/login_view/login_view.dart';
+import 'features/Authentication/presentations/views/signup_view/register_view.dart';
+import 'features/brand/presentation/view/brand_view.dart';
+
 void main() {
   runApp(const WajbahChef());
 }
@@ -16,12 +20,9 @@ class WajbahChef extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        fontFamily: "Biryani",
-        canvasColor: Colors.white
-      ),
+      theme: ThemeData(fontFamily: "Biryani", canvasColor: Colors.white),
       debugShowCheckedModeBanner: false,
-      home: const MarketView(),
+      home: const DashboardView(),
       routes: {
         "onboarding": (context) => const OnBoardingScreen(),
         "home": (context) => const HomeScreenView(),

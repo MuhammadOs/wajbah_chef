@@ -29,8 +29,10 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
+      backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
             _scaffoldKey.currentState!.openDrawer();

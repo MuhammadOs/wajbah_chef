@@ -31,6 +31,7 @@ class _OnBoardingBodyState extends State<OnBoardingBody> {
     double height = SizeConfig.screenH!;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(
             horizontal: width * 0.04, vertical: height * 0.1),
