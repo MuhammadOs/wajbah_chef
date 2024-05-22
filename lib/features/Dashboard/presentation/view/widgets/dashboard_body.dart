@@ -14,6 +14,8 @@ import 'package:wajbah_chef/core/styles.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
 import 'package:wajbah_chef/features/Dashboard/presentation/view/widgets/large_dashboard_container.dart';
 import 'package:wajbah_chef/features/Dashboard/presentation/view/widgets/small_dashboard_container.dart';
+import 'package:wajbah_chef/features/brand/presentation/view/brand_view.dart';
+import 'package:wajbah_chef/features/market/presentation/view/market_view.dart';
 
 class DashBoardBody extends StatelessWidget {
   const DashBoardBody({super.key});
@@ -33,12 +35,21 @@ class DashBoardBody extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Column(
                 children: [
-                  LargeDashboardContainer(
-                    height: height,
-                    width: width,
-                    name: 'General Rec.',
-                    color: 0xffFEB930,
-                    icon: Bi.star_fill,
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (c) {
+                          return Container();
+                        },
+                      ));
+                    },
+                    child: LargeDashboardContainer(
+                      height: height,
+                      width: width,
+                      name: 'General Rec.',
+                      color: 0xffFEB930,
+                      icon: Bi.star_fill,
+                    ),
                   ),
                   SizedBox(
                     height: height * 0.03,
@@ -67,19 +78,37 @@ class DashBoardBody extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SmallDashboardContainer(
-                        height: height,
-                        width: width,
-                        name: 'Market',
-                        color: 0xffB54EF7,
-                        icon: IconParkTwotone.weixin_market,
-                      ),
-                      SmallDashboardContainer(
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (c) {
+                              return const MarketView();
+                            },
+                          ));
+                        },
+                        child: SmallDashboardContainer(
                           height: height,
                           width: width,
-                          color: 0xffFF926F,
-                          name: 'Brand',
-                          icon: Foundation.pricetag_multiple)
+                          name: 'Market',
+                          color: 0xffB54EF7,
+                          icon: IconParkTwotone.weixin_market,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (c) {
+                              return const BrandView();
+                            },
+                          ));
+                        },
+                        child: SmallDashboardContainer(
+                            height: height,
+                            width: width,
+                            color: 0xffFF926F,
+                            name: 'Brand',
+                            icon: Foundation.pricetag_multiple),
+                      )
                     ],
                   ),
                   SizedBox(
