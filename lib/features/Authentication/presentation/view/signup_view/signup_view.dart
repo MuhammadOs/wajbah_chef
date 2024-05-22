@@ -81,7 +81,7 @@ class _LoginViewState extends State<RegisterView> {
                   ),
                   PasswordTextField(
                     passwordController: passwordController,
-                    isPassword: isPassword,
+                    hidePassword: true,
                     onPressed: () {
                       setState(() {
                         isPassword = !isPassword;
@@ -94,7 +94,7 @@ class _LoginViewState extends State<RegisterView> {
                   ),
                   PasswordTextField(
                     passwordController: passwordController,
-                    isPassword: isPassword,
+                    hidePassword: true,
                     onPressed: () {
                       setState(() {
                         isPassword = !isPassword;

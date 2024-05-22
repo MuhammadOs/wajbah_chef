@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wajbah_chef/features/Authentication/presentations/views/ResetPassword/reset_password.dart';
+import 'package:wajbah_chef/features/Authentication/presentation/view/ResetPassword/reset_password.dart';
 import '../../../../../core/constants/constants.dart';
 import '../../../../../core/sizeConfig.dart';
 import '../../../../../core/styles.dart';

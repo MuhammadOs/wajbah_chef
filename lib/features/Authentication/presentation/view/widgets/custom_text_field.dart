@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:wajbah_chef/core/constants/constants.dart';
+import 'package:wajbah_chef/core/styles.dart';
 
-import '../../../../../core/constants/constants.dart';
-import '../../../../../core/styles.dart';
 import 'hint_text.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField(
-      {super.key, required this.usernameController, this.hintText});
+      {super.key,
+      required this.usernameController,
+      this.hintText,
+      this.onSaved});
 
   final TextEditingController usernameController;
   final String? hintText;
+  final void Function(String? value)? onSaved;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +21,9 @@ class CustomTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         HintText(hintText: hintText ?? ""),
+        const SizedBox(
+          height: 5,
+        ),
         TextFormField(
           controller: usernameController,
           style: Styles.titleSmall,
@@ -36,7 +43,7 @@ class CustomTextField extends StatelessWidget {
               ),
             ),
             focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
+              borderRadius: BorderRadius.all(Radius.circular(15)),
               borderSide: BorderSide(
                 color: wajbah_gray,
                 width: 1.0,
@@ -63,10 +70,11 @@ class CustomTextField extends StatelessWidget {
           },
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'username must not be empty !';
+              return '$hintText must not be empty !';
             }
             return null;
           },
+          onSaved: onSaved,
         ),
       ],
     );

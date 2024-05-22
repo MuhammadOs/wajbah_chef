@@ -6,7 +6,7 @@ import 'package:iconify_flutter/icons/line_md.dart';
 import 'package:iconify_flutter/icons/prime.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
-import 'package:wajbah_chef/features/Authentication/presentations/views/login_view/login_view.dart';
+import 'package:wajbah_chef/features/Authentication/presentation/view/login_view/login_view.dart';
 import 'dart:io';
 import '../../../../../core/constants/constants.dart';
 import '../../../../../core/sizeConfig.dart';
@@ -348,7 +348,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                 ),
                                 PasswordTextField(
                                   passwordController: passwordController,
-                                  isPassword: isPassword,
+                                  hidePassword: true,
                                   onPressed: () {
                                     setState(() {
                                       isPassword = !isPassword;
@@ -361,7 +361,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                 ),
                                 PasswordTextField(
                                   passwordController: rePasswordController,
-                                  isPassword: isPassword,
+                                  hidePassword: true,
                                   onPressed: () {
                                     setState(() {
                                       isPassword = !isPassword;

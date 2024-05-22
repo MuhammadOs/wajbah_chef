@@ -48,8 +48,8 @@ class _PasswordChangedState extends State<ResetPassword> {
               children: [
                 const HintText(hintText: "Password"),
                 PasswordTextField(
+                  hidePassword: true,
                   passwordController: passwordController,
-                  isPassword: isPassword,
                   onPressed: () {
                     setState(() {
                       isPassword = !isPassword;
@@ -62,7 +62,7 @@ class _PasswordChangedState extends State<ResetPassword> {
                 const HintText(hintText: "Re-enter password"),
                 PasswordTextField(
                   passwordController: confirmPasswordController,
-                  isPassword: isConfirmPassword,
+                  hidePassword: true,
                   onPressed: () {
                     setState(() {
                       isConfirmPassword = !isConfirmPassword;

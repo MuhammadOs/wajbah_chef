@@ -8,7 +8,7 @@ import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/styles.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
 import '../../../../core/sizeConfig.dart';
-import '../../../Authentication/presentations/views/widgets/custom_button.dart';
+import '../../../Authentication/presentation/view/widgets/custom_button.dart';
 import '../../data/menu_item.dart';
 
 class CreateRoomView extends StatefulWidget {
