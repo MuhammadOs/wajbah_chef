@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:wajbah_chef/core/errors/error_types.dart';
 import 'package:wajbah_chef/features/Authentication/data/model/login/login_model.dart';
 import 'package:wajbah_chef/features/Authentication/data/model/login/login_response_model.dart';
+import 'package:wajbah_chef/features/Authentication/data/model/register/Chef.dart';
+import 'package:wajbah_chef/features/Authentication/data/model/register/Chef_register_request.dart';
 
 import 'package:wajbah_chef/features/Authentication/data/repo/auth_remote_source.dart';
 
@@ -11,13 +13,11 @@ class AuthRepoImpl {
 
   AuthRepoImpl({required this.authRemoteResource});
 
-  /*Future<Either<Exception, String>> register(
-      RegisterModel registerModel) async {
+  Future<Either<Exception, void>> register(
+      Chef registerModel) async {
     try {
-      final Response response =
           await authRemoteResource.register(registerModel);
-      String token = response.data['token'];
-      return Right(token);
+      return Right(null);
     } catch (exception) {
       if (exception is DioException) {
         return Left(exception);
@@ -25,7 +25,7 @@ class AuthRepoImpl {
         return Left(CashError());
       }
     }
-  }*/
+  }
 
   Future<Either<Exception, String>> login(LoginModel loginModel) async {
     try {

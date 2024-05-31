@@ -1,12 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/line_md.dart';
 import 'package:iconify_flutter/icons/prime.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
+import 'package:wajbah_chef/features/Authentication/data/model/register/Address.dart';
+import 'package:wajbah_chef/features/Authentication/data/model/register/Chef.dart';
+import 'package:wajbah_chef/features/Authentication/data/model/register/Chef_register_request.dart';
 import 'package:wajbah_chef/features/Authentication/presentation/view/login_view/login_view.dart';
+import 'package:wajbah_chef/features/Authentication/presentation/view/widgets/custom_button.dart';
+import 'package:wajbah_chef/features/Authentication/presentation/view_model/auth_cubit.dart';
+import 'package:wajbah_chef/features/Authentication/presentation/view_model/auth_states.dart';
 import 'dart:io';
 import '../../../../../core/constants/constants.dart';
 import '../../../../../core/sizeConfig.dart';
@@ -37,6 +44,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
   var bankAccountController = TextEditingController();
   var kitchenController = TextEditingController();
   var descriptionController = TextEditingController();
+  var governerateController = TextEditingController();
   var personalFormKey = GlobalKey<FormState>();
   var securityFormKey = GlobalKey<FormState>();
   var profileFormKey = GlobalKey<FormState>();
@@ -54,8 +62,69 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
       setState(() {
         _profileImage = File(pickedImage.path);
       });
+      
     }
   }
+
+  void _register() {
+    if (!profileFormKey.currentState!.validate()) {
+      return;
+    }
+    profileFormKey.currentState!.save();
+
+    
+    print(userData);
+
+    
+    BlocProvider.of<AuthCubit>(context).register(Chef(
+      chefFirstName: userData['chefFirstName'],
+      chefLastName: userData['chefLastName'],
+      chefId: userData['chefId'],
+      birthDate: userData['birthDate'],
+      chefPromoCodes: userData['chefPromoCodes'],
+      promoCodes: userData['promoCodes'],
+      address: userData['address'],
+      description: userData['description'],
+      extraMenuItems: userData['extramenuItems'],
+      menuItems: userData['menuItems'],
+      profilePicture: userData['profilePicture'],
+      rating: userData['rating'],
+      wallet: userData['wallet'],
+      restaurantName: userData['restaurantName'],
+      phoneNumber: userData['phoneNumber'],
+      email: userData['email'],
+      password: userData['password'],
+      role: userData['role'],
+    ));
+  }
+
+  Map<String, dynamic> userData = {
+    "phoneNumber": 0,
+    "email": "",
+    "password": "",
+    "chefFirstName": "",
+    "chefLastName": "",
+    "birthDate": "",
+    "chefId": "",
+    "restaurantName": '',
+    "description": '',
+    "role": '',
+    "profilePicture": '',
+    "chefPromoCodes": '',
+    "menuItems": "",
+    "extramenuItems": "",
+    "promoCodes": '',
+    "wallet": 0,
+    "rating": 0,
+    "address": Address(
+      buildingNumber: '',
+      city: '',
+      flatNumber: '',
+      floor: '',
+      governorate: '',
+      street: '',
+    ),
+  };
 
   continueStep() {
     if (currentStep < 2) {
@@ -76,7 +145,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
   cancelStep() {
     if (currentStep > 0) {
       setState(() {
-        currentStep = currentStep - 1; //currentStep-=1;
+        currentStep = currentStep - 1;
       });
     }
   }
@@ -86,7 +155,6 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
       currentStep = value;
     });
   }
-
   Widget controlBuilders(context, details) {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
@@ -105,13 +173,14 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
               style: ElevatedButton.styleFrom(
                 elevation: 0,
                 backgroundColor: wajbah_primary,
+
                 shadowColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
                 splashFactory: NoSplash.splashFactory,
               ),
-              onPressed: details.onStepCancel,
+              onPressed: details.onStepCancel ,
               child: const Align(
                 alignment: Alignment.centerLeft,
                 child: Icon(
@@ -124,7 +193,31 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
           SizedBox(
             width: width * 0.6,
             height: height * 0.05,
-            child: ElevatedButton(
+            child: currentStep == 0  |1 |2
+              ? BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state is AuthErrorState) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.errorModel.message!),
+                        ),
+                      );
+                    } else if (state is RegisterSuccessfullyState) {
+                      Navigator.pushNamed(context, "login");
+                    }
+                  },
+                  builder: (context, state) {
+                    return (state is LoginAuthState)
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : CustomButton(
+                            color: wajbah_primary,
+                            text: "Finish",
+                            onPressed: _register,
+                          );
+                  },
+                ): ElevatedButton(
               style: ElevatedButton.styleFrom(
                 elevation: 0,
                 backgroundColor: wajbah_primary,
@@ -135,13 +228,19 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                 splashFactory: NoSplash.splashFactory,
               ),
               onPressed: details.onStepContinue,
-              child: const Align(
-                alignment: Alignment.centerRight,
-                child: Icon(
-                  Icons.arrow_forward,
-                  color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 60),
+                  child: Text(currentStep==2 ?'Finish' : 'Next',style: Styles.titleMedium.copyWith(color: wajbah_white,fontSize: 18),),
                 ),
+                const Icon(
+                Icons.arrow_forward,
+                color: Colors.white,
               ),
+                
+              ],),
             ),
           ),
         ],
@@ -219,6 +318,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                       child: CustomTextField(
                                         usernameController: firstnameController,
                                         hintText: "First name",
+                                        onSaved: (value) => {
+                                          setState(() {
+                                            userData['firstName'] = value;
+                                          })
+                                          
+                                        },
                                       ),
                                     ),
                                     SizedBox(
@@ -228,6 +333,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                       child: CustomTextField(
                                         usernameController: lastnameController,
                                         hintText: "Last name",
+                                        onSaved: (value) => {
+                                          setState(() {
+                                            userData['lastName'] = value;
+                                          })
+                                          
+                                        },
                                       ),
                                     )
                                   ],
@@ -243,6 +354,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     child: CustomTextField(
                                       usernameController: _birthdateController,
                                       hintText: "Birthdate",
+                                      onSaved: (value) => {
+                                        setState(() {
+                                          userData['birthDate'] = value;
+                                        })
+                                          
+                                        },
                                     ),
                                   ),
                                 ),
@@ -252,6 +369,26 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                 CustomTextField(
                                   usernameController: nationalIdController,
                                   hintText: "National ID",
+                                  onSaved: (value) => {
+                                    setState(() {
+                                      userData['chefId'] = value;
+                                    })
+                                          
+                                        },
+                                ),
+                                SizedBox(
+                                  height: height * 0.02,
+                                ),
+                                CustomTextField(
+                                  usernameController: governerateController,
+                                  hintText: "Governrate",
+                                  onSaved: (value) => {
+                                    setState(() {
+                                      userData['address'].governorate = value;
+                                      userData['profilePicture'] = 'String';
+                                    })
+                                          
+                                        },
                                 ),
                                 SizedBox(
                                   height: height * 0.02,
@@ -262,6 +399,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                       child: CustomTextField(
                                         usernameController: cityController,
                                         hintText: "City",
+                                        onSaved: (value) => {
+                                          setState(() {
+                                            userData['address'].city = value;
+                                          })
+                                          
+                                        },
                                       ),
                                     ),
                                     SizedBox(
@@ -271,6 +414,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                       child: CustomTextField(
                                         usernameController: streetController,
                                         hintText: "Street",
+                                        onSaved: (value) => {
+                                          setState(() {
+                                            userData['address'].street = value;
+                                          })
+                                          
+                                        },
                                       ),
                                     )
                                   ],
@@ -284,6 +433,13 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                       child: CustomTextField(
                                         usernameController: buildingController,
                                         hintText: "Building no.",
+                                        onSaved: (value) => {
+                                          setState(() {
+                                            userData['address'].buildingNumber = value;
+                                          })
+                                          
+                                        },
+                                        
                                       ),
                                     ),
                                     SizedBox(
@@ -293,6 +449,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                       child: CustomTextField(
                                         usernameController: floorController,
                                         hintText: "Floor no.",
+                                        onSaved: (value) => {
+                                          setState(() {
+                                            userData['address'].floor = value;
+                                          })
+                                          
+                                        },
                                       ),
                                     ),
                                     SizedBox(
@@ -302,6 +464,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                       child: CustomTextField(
                                         usernameController: flatController,
                                         hintText: "Flat no.",
+                                        onSaved: (value) => {
+                                          setState(() {
+                                            userData['address'].flatNumber = value;
+                                          })
+                                          
+                                        },
                                       ),
                                     ),
                                   ],
@@ -335,6 +503,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                 CustomTextField(
                                   usernameController: emailController,
                                   hintText: "Email",
+                                  onSaved: (value) => {
+                                    
+                                      userData['email'] = value
+                                    
+                                          
+                                        },
                                 ),
                                 SizedBox(
                                   height: height * 0.02,
@@ -342,6 +516,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                 CustomTextField(
                                   usernameController: phoneNumberController,
                                   hintText: "Phone number",
+                                  onSaved: (value) => {
+                                    setState(() {
+                                      userData['phoneNumber'] = value;
+                                    })
+                                          
+                                        },
                                 ),
                                 SizedBox(
                                   height: height * 0.02,
@@ -355,6 +535,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     });
                                   },
                                   hintText: "Password",
+                                  onSaved: (value) => {
+                                    setState(() {
+                                      userData['password'] = value;
+                                    })
+                                          
+                                        },
                                 ),
                                 SizedBox(
                                   height: height * 0.01,
@@ -368,14 +554,15 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     });
                                   },
                                   hintText: "Re-enter password",
+                                  
                                 ),
                                 SizedBox(
                                   height: height * 0.01,
                                 ),
-                                CustomTextField(
+                                /*CustomTextField(
                                   usernameController: bankAccountController,
                                   hintText: "Bank account",
-                                ),
+                                ),*/
                                 SizedBox(
                                   height: height * 0.1,
                                 ),
@@ -465,6 +652,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                                             Navigator.of(
                                                                     context)
                                                                 .pop();
+                                                                
                                                           },
                                                           child: const Text(
                                                               'Choose from Gallery'),
@@ -501,6 +689,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                 CustomTextField(
                                   usernameController: kitchenController,
                                   hintText: "Kitchen name",
+                                  onSaved: (value) => {
+                                    setState(() {
+                                      userData['restaurantName'] = value;
+                                    })
+                                          
+                                        },
                                 ),
                                 SizedBox(
                                   height: height * 0.02,
@@ -508,6 +702,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                 CustomTextField(
                                   usernameController: descriptionController,
                                   hintText: "Description",
+                                  onSaved: (value) => {
+                                    setState(() {
+                                      userData['description'] = value;
+                                    })
+                                          
+                                        },
                                 ),
                                 SizedBox(
                                   height: height * 0.05,
@@ -573,6 +773,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                   ),
                 ],
               ),
+              
             ],
           ),
         ),

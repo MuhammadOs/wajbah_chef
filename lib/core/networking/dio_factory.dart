@@ -12,7 +12,7 @@ class DioFactory {
     if (dio == null) {
       dio = Dio();
       dio!
-        ..options.baseUrl = 'http://kareemalaa-001-site1.mysitepanel.net/api/'
+        ..options.baseUrl = 'https://wajbahapi.azurewebsites.net/api/'
         ..options.connectTimeout = timeOut
         ..options.receiveTimeout = timeOut;
       if (kDebugMode) {

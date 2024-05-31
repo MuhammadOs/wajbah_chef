@@ -7,9 +7,6 @@ class InitialAuthState extends AuthState {}
 class RegisteringAuthState extends AuthState {}
 
 class RegisterSuccessfullyState extends AuthState {
-  final String token;
-
-  RegisterSuccessfullyState({required this.token});
 }
 
 class LoginAuthState extends AuthState {}
