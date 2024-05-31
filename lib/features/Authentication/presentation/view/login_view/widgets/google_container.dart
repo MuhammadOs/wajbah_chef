@@ -17,7 +17,7 @@ class GoogleIconContainer extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         child: Image.asset(
-          'assets/images/authentication/google_logo.png',
+          'assets/images/authentication/google_icon.png',
         ),
       ),
     );

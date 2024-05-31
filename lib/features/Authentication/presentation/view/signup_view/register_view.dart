@@ -62,7 +62,6 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
       setState(() {
         _profileImage = File(pickedImage.path);
       });
-      
     }
   }
 
@@ -72,15 +71,14 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
     }
     profileFormKey.currentState!.save();
 
-    
-    print(userData);
+    String birthDate =
+        _selectedDate != null ? _selectedDate!.toIso8601String() : "";
 
-    
     getAuthCubit(context).register(Chef(
       chefFirstName: userData['chefFirstName'],
       chefLastName: userData['chefLastName'],
       chefId: userData['chefId'],
-      birthDate: userData['birthDate'],
+      birthDate: birthDate,
       chefPromoCodes: userData['chefPromoCodes'],
       promoCodes: userData['promoCodes'],
       address: userData['address'],
@@ -126,41 +124,41 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
     ),
   };
 
-  continueStep() {
-    if (currentStep < 2) {
+  void continueStep() {
+    if (currentStep == 0 && personalFormKey.currentState!.validate()) {
+      personalFormKey.currentState!.save();
       setState(() {
-        currentStep = currentStep + 1;
+        currentStep++;
       });
-    } else if (currentStep == 2) {
+    } else if (currentStep == 1 && securityFormKey.currentState!.validate()) {
+      securityFormKey.currentState!.save();
       setState(() {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (c) {
-            return const LoginView();
-          },
-        ));
+        currentStep++;
       });
     }
   }
 
-  cancelStep() {
+  void cancelStep() {
     if (currentStep > 0) {
       setState(() {
-        currentStep = currentStep - 1;
+        currentStep--;
       });
     }
   }
 
-  onStepTapped(int value) {
+  void onStepTapped(int step) {
     setState(() {
-      currentStep = value;
+      currentStep = step;
     });
   }
+
   Widget controlBuilders(context, details) {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
     double height = SizeConfig.screenH!;
     double defaultPadding = SizeConfig.defaultPadding!;
     double fontSize = SizeConfig.fontSize!;
+
     return Padding(
       padding: EdgeInsets.all(defaultPadding),
       child: Row(
@@ -173,14 +171,13 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
               style: ElevatedButton.styleFrom(
                 elevation: 0,
                 backgroundColor: wajbah_primary,
-
                 shadowColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
                 splashFactory: NoSplash.splashFactory,
               ),
-              onPressed: details.onStepCancel ,
+              onPressed: details.onStepCancel,
               child: const Align(
                 alignment: Alignment.centerLeft,
                 child: Icon(
@@ -193,55 +190,60 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
           SizedBox(
             width: width * 0.6,
             height: height * 0.05,
-            child: currentStep == 0  |1 |2
-              ? BlocConsumer<AuthCubit, AuthState>(
-                  listener: (context, state) {
-                    if (state is AuthErrorState) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(state.errorModel.message!),
+            child: currentStep == 2
+                ? BlocConsumer<AuthCubit, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthErrorState) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.errorModel.message!),
+                          ),
+                        );
+                      } else if (state is RegisterSuccessfullyState) {
+                        // Navigator.pushNamed(context, "login");
+                      }
+                    },
+                    builder: (context, state) {
+                      return (state is LoginAuthState)
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : CustomButton(
+                              color: wajbah_primary,
+                              text: "Finish",
+                              onPressed: _register,
+                            );
+                    },
+                  )
+                : ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: wajbah_primary,
+                      shadowColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      splashFactory: NoSplash.splashFactory,
+                    ),
+                    onPressed: details.onStepContinue,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 60),
+                          child: Text(
+                            currentStep == 2 ? 'Finish' : 'Next',
+                            style: Styles.titleMedium
+                                .copyWith(color: wajbah_white, fontSize: 18),
+                          ),
                         ),
-                      );
-                    } else if (state is RegisterSuccessfullyState) {
-                      Navigator.pushNamed(context, "login");
-                    }
-                  },
-                  builder: (context, state) {
-                    return (state is LoginAuthState)
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : CustomButton(
-                            color: wajbah_primary,
-                            text: "Finish",
-                            onPressed: _register,
-                          );
-                  },
-                ): ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                backgroundColor: wajbah_primary,
-                shadowColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                splashFactory: NoSplash.splashFactory,
-              ),
-              onPressed: details.onStepContinue,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 60),
-                  child: Text(currentStep==2 ?'Finish' : 'Next',style: Styles.titleMedium.copyWith(color: wajbah_white,fontSize: 18),),
-                ),
-                const Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
-              ),
-                
-              ],),
-            ),
+                        const Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
           ),
         ],
       ),
@@ -282,7 +284,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 15,),
+              const SizedBox(height: 15),
               CustomAppBar(
                 title: "Register",
                 showBackButton: false,
@@ -291,7 +293,8 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                 flex: 9,
                 child: Stepper(
                   elevation: 0,
-                  controlsBuilder: controlBuilders,
+                  controlsBuilder: (context, details) =>
+                      controlBuilders(context, details),
                   type: StepperType.horizontal,
                   physics: const ScrollPhysics(),
                   onStepTapped: onStepTapped,
@@ -309,9 +312,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                  height: height * 0.05,
-                                ),
+                                SizedBox(height: height * 0.05),
                                 Row(
                                   children: [
                                     Expanded(
@@ -320,32 +321,26 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                         hintText: "First name",
                                         onSaved: (value) => {
                                           setState(() {
-                                            userData['firstName'] = value;
+                                            userData['chefFirstName'] = value;
                                           })
-                                          
                                         },
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: width * 0.02,
-                                    ),
+                                    SizedBox(width: width * 0.02),
                                     Expanded(
                                       child: CustomTextField(
                                         usernameController: lastnameController,
                                         hintText: "Last name",
                                         onSaved: (value) => {
                                           setState(() {
-                                            userData['lastName'] = value;
+                                            userData['chefLastName'] = value;
                                           })
-                                          
                                         },
                                       ),
                                     )
                                   ],
                                 ),
-                                SizedBox(
-                                  height: height * 0.02,
-                                ),
+                                SizedBox(height: height * 0.02),
                                 GestureDetector(
                                   onTap: () {
                                     _selectDate(context);
@@ -358,14 +353,11 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                         setState(() {
                                           userData['birthDate'] = value;
                                         })
-                                          
-                                        },
+                                      },
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  height: height * 0.02,
-                                ),
+                                SizedBox(height: height * 0.02),
                                 CustomTextField(
                                   usernameController: nationalIdController,
                                   hintText: "National ID",
@@ -373,12 +365,9 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     setState(() {
                                       userData['chefId'] = value;
                                     })
-                                          
-                                        },
+                                  },
                                 ),
-                                SizedBox(
-                                  height: height * 0.02,
-                                ),
+                                SizedBox(height: height * 0.02),
                                 CustomTextField(
                                   usernameController: governerateController,
                                   hintText: "Governrate",
@@ -387,12 +376,9 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                       userData['address'].governorate = value;
                                       userData['profilePicture'] = 'String';
                                     })
-                                          
-                                        },
+                                  },
                                 ),
-                                SizedBox(
-                                  height: height * 0.02,
-                                ),
+                                SizedBox(height: height * 0.02),
                                 Row(
                                   children: [
                                     Expanded(
@@ -403,13 +389,10 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                           setState(() {
                                             userData['address'].city = value;
                                           })
-                                          
                                         },
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: width * 0.02,
-                                    ),
+                                    SizedBox(width: width * 0.02),
                                     Expanded(
                                       child: CustomTextField(
                                         usernameController: streetController,
@@ -418,15 +401,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                           setState(() {
                                             userData['address'].street = value;
                                           })
-                                          
                                         },
                                       ),
                                     )
                                   ],
                                 ),
-                                SizedBox(
-                                  height: height * 0.02,
-                                ),
+                                SizedBox(height: height * 0.02),
                                 Row(
                                   children: [
                                     Expanded(
@@ -435,16 +415,13 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                         hintText: "Building no.",
                                         onSaved: (value) => {
                                           setState(() {
-                                            userData['address'].buildingNumber = value;
+                                            userData['address'].buildingNumber =
+                                                value;
                                           })
-                                          
                                         },
-                                        
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: width * 0.02,
-                                    ),
+                                    SizedBox(width: width * 0.02),
                                     Expanded(
                                       child: CustomTextField(
                                         usernameController: floorController,
@@ -453,30 +430,25 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                           setState(() {
                                             userData['address'].floor = value;
                                           })
-                                          
                                         },
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: width * 0.02,
-                                    ),
+                                    SizedBox(width: width * 0.02),
                                     Expanded(
                                       child: CustomTextField(
                                         usernameController: flatController,
                                         hintText: "Flat no.",
                                         onSaved: (value) => {
                                           setState(() {
-                                            userData['address'].flatNumber = value;
+                                            userData['address'].flatNumber =
+                                                value;
                                           })
-                                          
                                         },
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: height * 0.08,
-                                )
+                                SizedBox(height: height * 0.08)
                               ],
                             ),
                           ),
@@ -497,35 +469,28 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                  height: height * 0.05,
-                                ),
+                                SizedBox(height: height * 0.05),
                                 CustomTextField(
                                   usernameController: emailController,
                                   hintText: "Email",
                                   onSaved: (value) => {
-                                    
-                                      userData['email'] = value
-                                    
-                                          
-                                        },
+                                    setState(() {
+                                      userData['email'] = value;
+                                    })
+                                  },
                                 ),
-                                SizedBox(
-                                  height: height * 0.02,
-                                ),
+                                SizedBox(height: height * 0.02),
                                 CustomTextField(
                                   usernameController: phoneNumberController,
                                   hintText: "Phone number",
                                   onSaved: (value) => {
                                     setState(() {
-                                      userData['phoneNumber'] = value;
+                                      userData['phoneNumber'] =
+                                          int.parse(value!);
                                     })
-                                          
-                                        },
+                                  },
                                 ),
-                                SizedBox(
-                                  height: height * 0.02,
-                                ),
+                                SizedBox(height: height * 0.02),
                                 PasswordTextField(
                                   passwordController: passwordController,
                                   hidePassword: true,
@@ -539,12 +504,9 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     setState(() {
                                       userData['password'] = value;
                                     })
-                                          
-                                        },
+                                  },
                                 ),
-                                SizedBox(
-                                  height: height * 0.01,
-                                ),
+                                SizedBox(height: height * 0.01),
                                 PasswordTextField(
                                   passwordController: rePasswordController,
                                   hidePassword: true,
@@ -554,18 +516,13 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     });
                                   },
                                   hintText: "Re-enter password",
-                                  
                                 ),
-                                SizedBox(
-                                  height: height * 0.01,
-                                ),
+                                SizedBox(height: height * 0.01),
                                 /*CustomTextField(
                                   usernameController: bankAccountController,
                                   hintText: "Bank account",
                                 ),*/
-                                SizedBox(
-                                  height: height * 0.1,
-                                ),
+                                SizedBox(height: height * 0.1),
                               ],
                             ),
                           ),
@@ -600,18 +557,17 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                               BorderRadius.circular(15),
                                           border: Border.all(
                                               color: Colors.transparent),
-                                          color: wajbah_gray_light,
+                                          color: Colors.grey[200],
                                         ),
                                         child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            child: _profileImage != null
-                                                ? Image.file(
-                                                    _profileImage!,
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : Image.asset(
-                                                    "assets/images/authentication/chef_image.png")),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          child: _profileImage != null
+                                              ? Image.file(_profileImage!,
+                                                  fit: BoxFit.cover)
+                                              : Image.asset(
+                                                  "assets/images/authentication/chef_image.png"),
+                                        ),
                                       ),
                                       Positioned(
                                         bottom: -8.0,
@@ -641,9 +597,8 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                                               'Take a Picture'),
                                                         ),
                                                         SizedBox(
-                                                          height: SizeConfig
-                                                              .defaultPadding,
-                                                        ),
+                                                            height:
+                                                                defaultPadding),
                                                         GestureDetector(
                                                           onTap: () {
                                                             _pickImage(
@@ -652,7 +607,6 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                                             Navigator.of(
                                                                     context)
                                                                 .pop();
-                                                                
                                                           },
                                                           child: const Text(
                                                               'Choose from Gallery'),
@@ -673,19 +627,15 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                               borderRadius:
                                                   BorderRadius.circular(15),
                                             ),
-                                            child: const Icon(
-                                              Icons.camera_alt,
-                                              color: Colors.white,
-                                            ),
+                                            child: const Icon(Icons.camera_alt,
+                                                color: Colors.white),
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: height * 0.05,
-                                ),
+                                SizedBox(height: height * 0.05),
                                 CustomTextField(
                                   usernameController: kitchenController,
                                   hintText: "Kitchen name",
@@ -693,12 +643,9 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     setState(() {
                                       userData['restaurantName'] = value;
                                     })
-                                          
-                                        },
+                                  },
                                 ),
-                                SizedBox(
-                                  height: height * 0.02,
-                                ),
+                                SizedBox(height: height * 0.02),
                                 CustomTextField(
                                   usernameController: descriptionController,
                                   hintText: "Description",
@@ -706,12 +653,9 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                     setState(() {
                                       userData['description'] = value;
                                     })
-                                          
-                                        },
+                                  },
                                 ),
-                                SizedBox(
-                                  height: height * 0.05,
-                                ),
+                                SizedBox(height: height * 0.05),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -728,15 +672,12 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                                       child: Text(
                                         'I agree to the Terms & Conditions and Privacy Policy',
                                         textAlign: TextAlign.center,
-                                        style: Styles.hint
-                                            .copyWith(fontSize: fontSize),
+                                        style: TextStyle(fontSize: fontSize),
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: height * 0.097,
-                                ),
+                                SizedBox(height: height * 0.097),
                               ],
                             ),
                           ),
@@ -755,25 +696,23 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                 children: [
                   Text(
                     'Already have an account ?',
-                    style: Styles.titleSmall
-                        .copyWith(color: wajbah_gray, fontSize: fontSize),
+                    style: TextStyle(color: Colors.grey, fontSize: fontSize),
                   ),
                   TextButton(
                     onPressed: () {
                       Navigator.pushReplacementNamed(context, 'login');
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                    ),
+                        backgroundColor: Colors.transparent),
                     child: Text(
                       'Login',
-                      style: Styles.titleSmall
-                          .copyWith(color: wajbah_primary, fontSize: fontSize),
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: fontSize),
                     ),
                   ),
                 ],
               ),
-              
             ],
           ),
         ),
