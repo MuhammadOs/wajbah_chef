@@ -65,7 +65,7 @@ class WajbahApp extends StatelessWidget {
         child: MaterialApp(
           theme: ThemeData(fontFamily: "Biryani", canvasColor: Colors.white),
           debugShowCheckedModeBanner: false,
-          home: const MultiStepRegistration(),
+          home: const OnBoardingScreen(),
           routes: {
             "onboarding": (context) => const OnBoardingScreen(),
             "home": (context) => const HomeScreenView(),
