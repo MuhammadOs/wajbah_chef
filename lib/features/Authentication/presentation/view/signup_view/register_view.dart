@@ -76,7 +76,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
     print(userData);
 
     
-    BlocProvider.of<AuthCubit>(context).register(Chef(
+    getAuthCubit(context).register(Chef(
       chefFirstName: userData['chefFirstName'],
       chefLastName: userData['chefLastName'],
       chefId: userData['chefId'],
@@ -87,7 +87,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
       description: userData['description'],
       extraMenuItems: userData['extramenuItems'],
       menuItems: userData['menuItems'],
-      profilePicture: userData['profilePicture'],
+      profilePicture: 'String',
       rating: userData['rating'],
       wallet: userData['wallet'],
       restaurantName: userData['restaurantName'],
