@@ -60,6 +60,7 @@ class WajbahChef extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
+<<<<<<< HEAD
             theme: ThemeData(fontFamily: "Biryani", canvasColor: Colors.white),
             debugShowCheckedModeBanner: false,
             home: const LoginView(),
@@ -71,6 +72,19 @@ class WajbahChef extends StatelessWidget {
         "register": (context) => const MultiStepRegistration(),
         },
             )
+=======
+          theme: ThemeData(fontFamily: "Biryani", canvasColor: Colors.white),
+          debugShowCheckedModeBanner: false,
+          home: const OnBoardingScreen(),
+          routes: {
+            "onboarding": (context) => const OnBoardingScreen(),
+            "home": (context) => const HomeScreenView(),
+            "orders": (context) => const OrdersView(),
+            "login": (context) => const LoginView(),
+            "register": (context) => const MultiStepRegistration(),
+          },
+        ),
+>>>>>>> 41ce3ddcacdc0269085740fc6ba1cdff6242c880
       );
 });
 
