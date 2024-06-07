@@ -22,6 +22,7 @@ class AuthRemoteResource {
       AppConstants.loginUrl,
       data: loginModel.toJson(),
     );
+    print(response);
     return response;
   }
 

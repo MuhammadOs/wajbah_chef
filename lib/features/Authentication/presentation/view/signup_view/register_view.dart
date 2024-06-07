@@ -200,7 +200,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                           ),
                         );
                       } else if (state is RegisterSuccessfullyState) {
-                        // Navigator.pushNamed(context, "login");
+                         Navigator.pushNamed(context, "login");
                       }
                     },
                     builder: (context, state) {

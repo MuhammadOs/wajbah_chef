@@ -34,8 +34,10 @@ class AppConstants {
   // cart meals
 
   // end points
-  static const baseUrl = " http://kareemalaa-001-site1.mysitepanel.net/api";
+  static const baseUrl = "https://wajbah-api.azurewebsites.net/api/";
   static const registerUrl = "/UserChefAuth/register";
   static const loginUrl = "/UserChefAuth/login";
   static const logOutUrl = "/logout";
+  static const requestsUrl = "/OrderAPI";
+  static const activeSwitch = "/ActiveSwitch";
 }
