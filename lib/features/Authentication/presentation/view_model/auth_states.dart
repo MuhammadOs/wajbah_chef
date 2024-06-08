@@ -13,8 +13,11 @@ class LoginAuthState extends AuthState {}
 
 class LoginSuccessfullyState extends AuthState {
   final String token;
+  final String chef_id;
+  final bool active;
+  
 
-  LoginSuccessfullyState({required this.token});
+  LoginSuccessfullyState( {required this.chef_id,required this.token,required this.active});
 }
 
 class LoggingOutState extends AuthState {}

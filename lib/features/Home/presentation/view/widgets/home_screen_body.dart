@@ -36,9 +36,12 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            child: HomeHeader(
-              HeadText: 'New Requests',
-              HeadHint: '2',
+            child: Visibility(
+              visible: widget.online,
+              child: HomeHeader(
+                HeadText: 'New Requests',
+                HeadHint: '2',
+              ),
             ),
           ),
           SizedBox(

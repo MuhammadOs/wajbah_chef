@@ -4,8 +4,6 @@ import 'package:wajbah_chef/core/errors/error_types.dart';
 import 'package:wajbah_chef/features/Authentication/data/model/login/login_model.dart';
 import 'package:wajbah_chef/features/Authentication/data/model/login/login_response_model.dart';
 import 'package:wajbah_chef/features/Authentication/data/model/register/Chef.dart';
-import 'package:wajbah_chef/features/Authentication/data/model/register/Chef_register_request.dart';
-
 import 'package:wajbah_chef/features/Authentication/data/repo/auth_remote_source.dart';
 
 class AuthRepoImpl {
@@ -13,10 +11,9 @@ class AuthRepoImpl {
 
   AuthRepoImpl({required this.authRemoteResource});
 
-  Future<Either<Exception, void>> register(
-      Chef registerModel) async {
+  Future<Either<Exception, void>> register(Chef registerModel) async {
     try {
-          await authRemoteResource.register(registerModel);
+      await authRemoteResource.register(registerModel);
       return Right(null);
     } catch (exception) {
       if (exception is DioException) {
@@ -27,13 +24,13 @@ class AuthRepoImpl {
     }
   }
 
-  Future<Either<Exception, String>> login(LoginModel loginModel) async {
+  Future<Either<Exception, LoginResponseModel>> login(LoginModel loginModel) async {
     try {
       final Response response = await authRemoteResource.login(loginModel);
       final loginResponse = LoginResponseModel.fromJson(response.data);
 
       if (loginResponse.isSuccess == true) {
-        return Right(loginResponse.result?.token ?? '');
+        return Right(loginResponse);
       } else {
         return Left(ResponseError(
           statusCode: loginResponse.statusCode ?? 500,

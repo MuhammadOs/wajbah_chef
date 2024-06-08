@@ -11,7 +11,7 @@ import 'package:wajbah_chef/features/Authentication/presentation/view/widgets/cu
 import 'package:wajbah_chef/features/Authentication/presentation/view/widgets/password_text_field.dart';
 import 'package:wajbah_chef/features/Authentication/presentation/view_model/auth_cubit.dart';
 import 'package:wajbah_chef/features/Authentication/presentation/view_model/auth_states.dart';
-
+import 'package:wajbah_chef/features/Home/presentation/view/home_body.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -108,7 +108,16 @@ class _LoginViewState extends State<LoginView> {
                           SnackBar(content: Text(state.errorModel.message!)),
                         );
                       } else if (state is LoginSuccessfullyState) {
-                        Navigator.pushNamed(context, "home");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreenView(
+                              active: state.active,
+                              token: state.token,
+                              chefId: state.chef_id,
+                            ),
+                          ),
+                        );
                       }
                     },
                     builder: (context, state) {
@@ -130,10 +139,11 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 15),
                   const LoginRegisterNavigatorRow(),
                   TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, "home");
-                      },
-                      child: const Text("Skip"))
+                    onPressed: () {
+                      Navigator.pushNamed(context, "home");
+                    },
+                    child: const Text("Skip"),
+                  ),
                 ],
               ),
             ),
