@@ -27,4 +27,24 @@ class HomeRemoteSource {
       throw e;
     }
   }
+
+  Future<Map<String, dynamic>> fetchOrdersByChefId(String chefId, String token) async {
+    try {
+      final response = await dio.get(
+        AppConstants.chefRequests,
+        queryParameters: {'chefid': chefId},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      return response.data;
+    } catch (e) {
+      if (e is DioException) {
+        print('DioException: ${e.response?.data}');
+      }
+      throw e;
+    }
+  }
 }

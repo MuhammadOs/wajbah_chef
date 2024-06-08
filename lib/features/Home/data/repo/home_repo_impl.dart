@@ -20,4 +20,17 @@ class HomeRepoImpl {
       }
     }
   }
+
+  Future<Either<Exception, Map<String, dynamic>>> fetchOrdersByChefId(String chefId, String token) async {
+    try {
+      final result = await homeRemoteSource.fetchOrdersByChefId(chefId, token);
+      return Right(result);
+    } catch (exception) {
+      if (exception is DioException) {
+        return Left(exception);
+      } else {
+        return Left(CashError());
+      }
+    }
+  }
 }

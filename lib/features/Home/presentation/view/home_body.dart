@@ -9,6 +9,7 @@ import 'package:wajbah_chef/core/styles.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/custom_drawer.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/home_screen_body.dart';
 import 'package:wajbah_chef/features/Home/presentation/view_model/home_cubit.dart';
+import 'package:wajbah_chef/features/Home/presentation/view_model/home_state.dart';
 
 class HomeScreenView extends StatefulWidget {
   final String token;
@@ -40,6 +41,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     homeCubit.token = widget.token;
     homeCubit.chefId = widget.chefId;
     homeCubit.active = widget.active;
+    homeCubit.fetchOrders();  // Fetch orders when the screen initializes
   }
 
   @override
@@ -103,7 +105,19 @@ class _HomeScreenViewState extends State<HomeScreenView> {
       ),
       drawer: CustomDrawer(height: height),
       body: SafeArea(
-        child: HomeScreenBody(online: online),
+        child: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            if (state is HomeLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is HomeOrdersLoaded) {
+              return HomeScreenBody(online: online, orders: state.orders);
+            } else if (state is HomeErrorState) {
+              return Center(child: Text(state.errorModel.message!));
+            } else {
+              return HomeScreenBody(online: online, orders: {});
+            }
+          },
+        ),
       ),
     );
   }

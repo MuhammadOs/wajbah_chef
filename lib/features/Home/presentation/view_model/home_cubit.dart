@@ -35,8 +35,20 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  Future<void> fetchOrders() async {
+    try {
+      emit(HomeLoading());
+      final result = await homeRepoImpl.fetchOrdersByChefId(chefId!, token!);
+      result.fold(
+        (error) => emit(HomeErrorState(errorModel: ErrorHandler.errorModel)),
+        (orders) => emit(HomeOrdersLoaded(orders)),
+      );
+    } catch (e) {
+      emit(HomeErrorState(errorModel:ErrorHandler.errorModel));
+    }
+  }
   String? get getToken => token;
-  String? get getChefId => chefId;
+  String? get getChefId => chefId; 
 }
 
 HomeCubit getHomeCubit(BuildContext context, {bool listen = false}) =>

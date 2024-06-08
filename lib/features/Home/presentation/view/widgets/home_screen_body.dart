@@ -1,25 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:iconify_flutter/icons/bxs.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 import 'package:wajbah_chef/core/sizeConfig.dart';
-import 'package:wajbah_chef/features/Home/data/requests_item.dart';
+import 'package:wajbah_chef/features/Dashboard/presentation/view/dashboard_view.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/home_header.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/offline_request_container.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/requests_listitem.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/shortcut_item.dart';
 import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
-import 'package:wajbah_chef/features/dashboard/presentation/view/dashboard_view.dart';
 import 'package:wajbah_chef/features/menu/presentation/screens/menu_items_view.dart';
-import '../../../../menu/presentation/widgets/chat_room_view_widgets/menu_view_body.dart';
 
 class HomeScreenBody extends StatefulWidget {
-  const HomeScreenBody({super.key, required this.online});
+  const HomeScreenBody({super.key, required this.online, required this.orders});
 
   final bool online;
+  final Map<String, dynamic> orders;
 
   @override
   State<HomeScreenBody> createState() => _HomeScreenBodyState();
@@ -31,6 +28,9 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
     double height = SizeConfig.screenH!;
+    
+    List<dynamic> orders = widget.orders['result'] ?? [];
+    
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -40,7 +40,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               visible: widget.online,
               child: HomeHeader(
                 HeadText: 'New Requests',
-                HeadHint: '2',
+                HeadHint: orders.length.toString(),
               ),
             ),
           ),
@@ -49,23 +49,22 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
               child: widget.online == true
                   ? ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: Requests_data.length,
+                      itemCount: orders.length,
                       itemBuilder: (BuildContext context, int index) {
+                        final order = orders[index];
+                        final menuItem = order['menuItems'][0];
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: RequestsListItem(
                               height: height,
                               width: width,
-                              OrderId: Requests_data[index].Request_ID,
-                              Client_name: Requests_data[index].Requester_name,
-                              Client_location:
-                                  Requests_data[index].Requester_location,
-                              Order_Price: Requests_data[index].Item_price,
-                              Order_name: Requests_data[index].Item_name,
-                              Order_item_count:
-                                  Requests_data[index].num_of_items,
-                              Available_time:
-                                  Requests_data[index].Available_time),
+                              OrderId: order['orderId'],
+                              Client_name: "Customer ${order['customerId']}",
+                              Client_location: "Unknown",  // Add appropriate location
+                              Order_Price: order['totalPrice'],
+                              Order_name: menuItem['name'],
+                              Order_item_count: menuItem['sizesPrices']['priceSmall'],  // Example count
+                              Available_time: menuItem['estimatedTime']),
                         );
                       })
                   : OfflineRequest(height: height, width: width)),
@@ -140,6 +139,6 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
           )
         ],
       ),
-    ); //Column(
+    ); 
   }
 }
