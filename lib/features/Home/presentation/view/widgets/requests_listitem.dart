@@ -25,7 +25,7 @@ class RequestsListItem extends StatefulWidget {
 
   final double height;
   final double width;
-  final String OrderId;
+  final int OrderId;
   final String Order_name;
   final int Order_item_count;
   final String Client_name;
@@ -54,27 +54,28 @@ class _RequestsListItemState extends State<RequestsListItem> {
   }
 
   void _startCountdown() {
-    var time = widget.Available_time.split(':');
-    int minutes = int.parse(time[0]);
-    int seconds = int.parse(time[1]);
+  var time = widget.Available_time.split(':');
+  int minutes = int.parse(time[0]);
+  int seconds = int.parse(time[1]);
 
-    _duration = Duration(minutes: minutes, seconds: seconds);
+  _duration = Duration(minutes: minutes, seconds: seconds);
 
+  if (_duration.inSeconds > 0) {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        if (_duration.inSeconds > 0) {
-          _duration = _duration - Duration(seconds: 1);
-        } else {
-          _timer.cancel();
-        }
+        _duration = _duration - Duration(seconds: 1);
       });
     });
   }
+}
 
   @override
   Widget build(BuildContext context) {
-    String formattedTime =
-        '${_duration.inMinutes.remainder(60)}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}';
+    String formattedTime = _duration.inHours > 0
+    ? '${_duration.inHours}h ${_duration.inMinutes.remainder(60)}m ${(_duration.inSeconds % 60).toString().padLeft(2, '0')}s'
+    : _duration.inMinutes > 0
+        ? '${_duration.inMinutes}m ${(_duration.inSeconds % 60).toString().padLeft(2, '0')}s'
+        : '${(_duration.inSeconds % 60).toString().padLeft(2, '0')}s';
 
     return Container(
       width: widget.width * 0.8,

@@ -14,10 +14,27 @@ class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
     super.key,
     required this.height,
+    required this.token,
+    required this.kitchenName,
+    required this.chef_mail,
+    required this.chef_Fname,
+    required this.chef_Lname,
+    required this.description,
+    required this.phone_number,
+    required this.wallet,
+    required this.password,
   });
 
   final double height;
-
+  final String token;
+  final String kitchenName;
+  final String chef_mail;
+  final String chef_Fname;
+  final String chef_Lname;
+  final String description;
+  final int phone_number;
+  final double wallet;
+  final String password;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -34,18 +51,25 @@ class CustomDrawer extends StatelessWidget {
                   borderRadius: BorderRadius.circular(32),
                   child: Image.asset('assets/images/Wajbah_Finale.png')),
               title: Text(
-                'Willy\'s Kitchen',
+                kitchenName,
                 style: Styles.titleMedium.copyWith(fontSize: 16),
               ),
               subtitle: Text(
-                'Willy@gmail.com',
+                chef_mail,
                 style: Styles.titleMedium
                     .copyWith(fontSize: 13, color: wajbah_gray),
               ),
             ),
-            drawer_listtile(
-              name: 'Profile',
-              icon: LineMd.account,
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, 'profile');
+                
+              },
+              child: drawer_listtile(
+                name: 'Profile',
+                icon: LineMd.account,
+              
+              ),
             ),
             drawer_listtile(
               name: 'Scheduled Orders',

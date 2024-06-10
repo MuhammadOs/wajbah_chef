@@ -8,9 +8,11 @@ class drawer_listtile extends StatelessWidget {
     super.key,
     required this.name,
     required this.icon,
+    this.destination
   });
   String name;
   String icon;
+  String? destination;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,9 @@ class drawer_listtile extends StatelessWidget {
         name,
         style: Styles.titleMedium.copyWith(fontSize: 16),
       ),
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, destination!);
+      },
     );
   }
 }

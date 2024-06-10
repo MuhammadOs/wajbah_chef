@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
-import 'package:wajbah_chef/features/menu/presentation/screens/create_menu_item_view.dart';
+import 'package:wajbah_chef/features/menu/presentation/view/create_menu_item_view.dart';
 import '../../../../../core/styles.dart';
 import '../../../data/menu_item.dart';
 import '../room_card_list_view.dart';

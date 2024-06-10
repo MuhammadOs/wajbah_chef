@@ -115,6 +115,14 @@ class _LoginViewState extends State<LoginView> {
                               active: state.active,
                               token: state.token,
                               chefId: state.chef_id,
+                              resturant_name: state.resturant_name,
+                              chef_mail: state.chef_mail,
+                              chef_Fname: state.chef_Fname,
+                              chef_Lname: state.chef_Lname,
+                              description: state.description,
+                              wallet: state.description,
+                              password: state.password,
+                              
                             ),
                           ),
                         );

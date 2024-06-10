@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wajbah_chef/core/errors/error_handler.dart';
 import 'package:wajbah_chef/core/errors/error_model.dart';
+import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
 import 'package:wajbah_chef/features/Home/data/repo/home_repo_impl.dart';
 import 'package:wajbah_chef/features/Home/presentation/view_model/home_state.dart';
 
@@ -36,17 +37,18 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> fetchOrders() async {
-    try {
-      emit(HomeLoading());
-      final result = await homeRepoImpl.fetchOrdersByChefId(chefId!, token!);
-      result.fold(
-        (error) => emit(HomeErrorState(errorModel: ErrorHandler.errorModel)),
-        (orders) => emit(HomeOrdersLoaded(orders)),
-      );
-    } catch (e) {
-      emit(HomeErrorState(errorModel:ErrorHandler.errorModel));
-    }
+  try {
+    emit(HomeLoading());
+    final result = await homeRepoImpl.fetchOrdersByChefId(chefId!, token!);
+    final requestModel = result.fold(
+      (exception) => throw exception, // rethrow the exception if it's a Left value
+      (map) => RequestModel.fromJson(map), // create the RequestModel if it's a Right value
+    );
+    emit(HomeOrdersLoaded(requestModel));
+  } catch (e) {
+    emit(HomeErrorState(errorModel: ErrorHandler.errorModel));
   }
+}
   String? get getToken => token;
   String? get getChefId => chefId; 
 }

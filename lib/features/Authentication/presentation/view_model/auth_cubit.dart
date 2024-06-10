@@ -13,6 +13,15 @@ class AuthCubit extends Cubit<AuthState> {
   String? token;
   String? chefId;
   bool? active;
+  String? resturant_name;
+  String? chef_mail;
+  double? wallet;
+  String? password;
+  String? chef_Fname;
+  String? chef_Lname;
+  int?  phone_number;
+  String? description;
+
 
   AuthCubit({required this.authRepoImpl}) : super(InitialAuthState());
 
@@ -44,7 +53,15 @@ class AuthCubit extends Cubit<AuthState> {
         token = loginResponse.result?.token;
         chefId = loginResponse.result?.chef?.chefId;
         active = loginResponse.result?.chef?.active;
-        emit(LoginSuccessfullyState(token: token!, chef_id: chefId!,active: active!));
+        resturant_name = loginResponse.result?.chef?.restaurantName;
+        chef_mail = loginResponse.result?.chef?.email;
+        chef_Fname = loginResponse.result?.chef?.chefFirstName;
+        chef_Lname = loginResponse.result?.chef?.chefLastName;
+        wallet = loginResponse.result?.chef?.wallet;
+        phone_number = loginResponse.result?.chef?.phoneNumber;
+        password = loginResponse.result?.chef?.password;
+        description = loginResponse.result?.chef?.description;
+        emit(LoginSuccessfullyState(token: token!, chef_id: chefId!,active: active! , chef_mail: chef_mail!,description:description!, resturant_name:resturant_name!,chef_Fname: chef_Fname!,chef_Lname: chef_Lname!,password: password!,phone_number: phone_number!,wallet: wallet!));
       },
     );
   }

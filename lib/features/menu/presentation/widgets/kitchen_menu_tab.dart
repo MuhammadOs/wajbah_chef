@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wajbah_chef/features/menu/presentation/screens/menu_items_view.dart';
+import 'package:wajbah_chef/features/menu/presentation/view/menu_items_view.dart';
 import 'package:wajbah_chef/features/menu/presentation/widgets/chat_room_view_widgets/menu_view_body.dart';
 import '../../../../../core/styles.dart';
 import '../../../../core/constants/constants.dart';

@@ -1,4 +1,5 @@
 import 'package:wajbah_chef/core/errors/error_model.dart';
+import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
 
 abstract class HomeState {}
 
@@ -16,7 +17,7 @@ class HomeActiveSwitchSuccess extends HomeState {}
 
 
 class HomeOrdersLoaded extends HomeState {
-  final Map<String, dynamic> orders;
+  final  RequestModel orders;
 
   HomeOrdersLoaded(this.orders);
 }
