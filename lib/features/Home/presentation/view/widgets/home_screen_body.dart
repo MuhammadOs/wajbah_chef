@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:iconify_flutter/icons/bxs.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
@@ -14,10 +15,12 @@ import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
 import 'package:wajbah_chef/features/menu/presentation/view/menu_items_view.dart';
 
 class HomeScreenBody extends StatefulWidget {
-  const HomeScreenBody({super.key, required this.online, required this.orders});
+  const HomeScreenBody({super.key,required this.token, required this.online, required this.orders,required this.chef_id});
 
  final bool online;
  final RequestModel orders;
+ final String token;
+ final String chef_id;
 
   @override
   State<HomeScreenBody> createState() => _HomeScreenBodyState();
@@ -131,7 +134,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (c) {
-                        return const MenuView();
+                        return  MenuView(chefId: widget.chef_id,token: widget.token,);
                       },
                     ));
                   },

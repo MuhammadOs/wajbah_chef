@@ -117,6 +117,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
       drawer: BlocBuilder<AuthCubit, AuthState>(
   builder: (context, state) {
     if (state is LoginSuccessfullyState) {
+      final chef_id = state.chef_id;
       final resturant_name = state.resturant_name;
       final chef_mail = state.chef_mail;
       final chef_Fname = state.chef_Fname;
@@ -138,11 +139,11 @@ class _HomeScreenViewState extends State<HomeScreenView> {
       if (state is HomeLoading) {
         return Center(child: CircularProgressIndicator());
       } else if (state is HomeOrdersLoaded) {
-        return HomeScreenBody(online: online, orders: state.orders);
+        return HomeScreenBody(online: online, orders: state.orders,chef_id: widget.chefId, token: widget.token,);
       } else if (state is HomeErrorState) {
         return Center(child: Text(state.errorModel.message!));
       } else {
-        return HomeScreenBody(online: online, orders: RequestModel()); // Pass an empty RequestModel
+        return HomeScreenBody(online: online, orders: RequestModel(), token: widget.token,chef_id: widget.token,); // Pass an empty RequestModel
       }
     },
   ),

@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/styles.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
+import 'package:wajbah_chef/features/menu/data/model/menu_item_model.dart';
 import '../../../../core/sizeConfig.dart';
 import '../../../Authentication/presentation/view/widgets/custom_button.dart';
 import '../../data/menu_item.dart';
@@ -338,9 +339,9 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                                 }
                                 final MenuItem newRoom = MenuItem(
                                   name: _itemNameController.text,
-                                  bio: _descriptionController.text,
-                                  profileImage: _profileImage,
-                                  numberOfPersons: 3000,
+                                  
+                                  rate: 30000,
+                                  description: _descriptionController.text,
                                 );
                                 widget.onMenuItemCreated(newRoom);
                                 Navigator.pop(context);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
+import 'package:wajbah_chef/features/menu/data/model/menu_item_model.dart';
 import '../../../../core/sizeConfig.dart';
 import '../../../../core/styles.dart';
 import '../../data/menu_item.dart';
@@ -20,10 +21,15 @@ class MenuCard extends StatelessWidget {
     return Material(
       borderRadius: BorderRadius.circular(8),
       child: ListTile(
-        leading: menuItem.profileImage != null
-            ? Image(
-                image: FileImage(menuItem.profileImage!),
-                width: width * 0.1,
+        leading: menuItem.photo != null
+            ? //Image(
+                //image: FileImage(menuItem.photo!),
+                //width: width * 0.1,
+              //)
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: Theme.of(context).primaryColor,
+                child: const Icon(Icons.photo),
               )
             : CircleAvatar(
                 radius: 22,
@@ -31,13 +37,13 @@ class MenuCard extends StatelessWidget {
                 child: const Icon(Icons.photo),
               ),
         title: Text(
-          menuItem.name,
+          menuItem.name!,
           style: Styles.titleMedium.copyWith(fontSize: 18, color: wajbah_black),
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
         ),
         subtitle: Text(
-          menuItem.bio,
+          menuItem.description!,
           style: Styles.hint.copyWith(fontSize: 12),
           overflow: TextOverflow.ellipsis,
           maxLines: 1,

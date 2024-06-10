@@ -6,10 +6,10 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/sizeConfig.dart';
 
 List<String> _tabTitles = [
-  "Trending",
-  "Up to 50 %",
-  "Share box",
-  "Kids Meals",
+  "Grilled",
+  "Oriental",
+  "Greeny",
+  "Desserts",
   "Offers"
 ];
 
@@ -61,10 +61,10 @@ class _KitchenMenuTabState extends State<KitchenMenuTab>
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: Colors.transparent,
               tabs: [
-                _buildTab("Trending", 0),
-                _buildTab("Up to 50 %", 1),
-                _buildTab("Share Box", 2),
-                _buildTab("Kids Meal", 3),
+                _buildTab("Grilled", 0),
+                _buildTab("Orirental", 1),
+                _buildTab("Greeny", 2),
+                _buildTab("Desserts", 3),
                 _buildTab("Offers", 4),
               ],
               onTap: (index) {
@@ -87,7 +87,7 @@ class _KitchenMenuTabState extends State<KitchenMenuTab>
                     style: Styles.titleMedium.copyWith(fontSize: width * 0.05),
                   ),
                 ),
-                MenuViewBody()
+                MenuViewBody(token: '', chefId: '',)
               ],
             ),
         ],
