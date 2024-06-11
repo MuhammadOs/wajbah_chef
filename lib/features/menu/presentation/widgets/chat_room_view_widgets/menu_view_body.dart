@@ -4,8 +4,8 @@ import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/styles.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
 import 'package:wajbah_chef/features/menu/data/model/menu_item_model.dart';
-import 'package:wajbah_chef/features/menu/presentation/view_model/menu_get_cubit.dart';
-import 'package:wajbah_chef/features/menu/presentation/view_model/menu_get_state.dart';
+import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit.dart';
+import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_states.dart';
 import 'package:wajbah_chef/features/menu/presentation/widgets/room_card_list_view.dart';
 
 class MenuViewBody extends StatefulWidget {
@@ -27,7 +27,9 @@ class _MenuViewBodyState extends State<MenuViewBody>
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
     final menuCubit = context.read<MenuGetCubit>();
-    menuCubit.fetchMenu(chefId: widget.chefId, token: widget.token);
+    print('chef id : ${widget.chefId}');
+    print('token : ${widget.token}');
+    menuCubit.fetchMenuItemsByID(chefId: widget.chefId, token: widget.token);
   }
 
   @override
@@ -39,7 +41,7 @@ class _MenuViewBodyState extends State<MenuViewBody>
           if (state is MenuGetStateLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is MenuGetStateLoaded) {
-            return _buildLoadedState(state.menuItems);
+            return _buildLoadedState(state.menuItemModel);
           } else if (state is MenuGetErrorState) {
             return Center(child: Text("Error loading menu items"));
           } else {

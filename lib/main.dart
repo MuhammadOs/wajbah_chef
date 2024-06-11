@@ -13,7 +13,7 @@ import 'package:wajbah_chef/features/OnBoarding/presentations/view/onboarding.da
 import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuItem_remotesource.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuitem_repo_impl.dart';
-import 'package:wajbah_chef/features/menu/presentation/view_model/menu_get_cubit.dart';
+import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit.dart';
 
 import 'features/Authentication/presentation/view/login_view/login_view.dart';
 import 'features/Authentication/presentation/view/signup_view/register_view.dart';

@@ -41,4 +41,5 @@ class AppConstants {
   static const ActiveSwitch = "/Chef/ActiveSwitch";
   static const chefRequests = "/OrderAPI/GetOrdersRequests";
   static const menuItems = "/MenuItemAPI/GetMenuItemsByChefId";
+  static const postMenuItem = "/MenuItemAPI";
 }

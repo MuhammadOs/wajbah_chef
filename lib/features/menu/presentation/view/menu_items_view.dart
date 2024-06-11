@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuItem_remotesource.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuitem_repo_impl.dart';
-import 'package:wajbah_chef/features/menu/presentation/view_model/menu_get_cubit.dart';
+import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit.dart';
 import 'package:wajbah_chef/features/menu/presentation/widgets/chat_room_view_widgets/menu_view_body.dart';
 
 class MenuView extends StatefulWidget {
