@@ -12,28 +12,42 @@ import 'package:wajbah_chef/features/Home/presentation/view/widgets/offline_requ
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/requests_listitem.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/shortcut_item.dart';
 import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
+import 'package:wajbah_chef/features/detailed_request/presentation/view/widgets/detailed_request_body.dart';
 import 'package:wajbah_chef/features/menu/presentation/view/menu_items_view.dart';
 
-class HomeScreenBody extends StatefulWidget {
-  const HomeScreenBody({super.key,required this.token, required this.online, required this.orders,required this.chef_id});
+import '../../../../../core/constants/constants.dart';
+import '../../../data/requests_item.dart';
 
- final bool online;
- final RequestModel orders;
- final String token;
- final String chef_id;
+class HomeScreenBody extends StatefulWidget {
+  const HomeScreenBody({super.key, required this.token, required this.online, required this.orders, required this.chef_id});
+
+  final bool online;
+  final RequestModel orders;
+  final String token;
+  final String chef_id;
 
   @override
   State<HomeScreenBody> createState() => _HomeScreenBodyState();
 }
 
 class _HomeScreenBodyState extends State<HomeScreenBody> {
+
+  final TimerService _timerService = TimerService();
+
+  @override
+  void dispose() {
+    _timerService.cancelTimer();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
     double height = SizeConfig.screenH!;
 
-    List<Result> orders = widget.orders.result?? [];
+    List<Result> orders = widget.orders.result ?? [];
 
     return SingleChildScrollView(
       child: Column(
@@ -51,30 +65,33 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
           SizedBox(
             height: height * 0.3,
             child: widget.online
-               ? ListView.builder(
+                ? ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: orders.length,
                     itemBuilder: (BuildContext context, int index) {
                       final order = orders[index];
                       final menuItem = order.menuItems![0];
-                      if(order.status == "Pending"){
+                      if (order.status == "Pending") {
                         return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: RequestsListItem(
-                          height: height,
-                          width: width,
-                          OrderId: order.orderId!,
-                          Client_name: "Customer Name",
-                          Client_location: "Unknown", // Add appropriate location
-                          Order_Price: order.totalPrice!,
-                          Order_name: menuItem.name!,
-                          Order_item_count: 5, // Example count
-                          Available_time: '00:600',
-                        ),
-                      );
-
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: RequestsListItem(
+                            height: height,
+                            width: width,
+                            OrderId: order.orderId!.toString(),
+                            PhoneNumber: order.deliveryNumber!.toString(),
+                            Client_name: "Customer Name",
+                            Client_location: "Unknown", 
+                            Order_Price: order.totalPrice!,
+                            Order_name: menuItem.name!,
+                            Order_item_count: order.menuItems!.length, 
+                            Available_time: '03:00',
+                            ItemDescription: '',
+                            Condition: 'Pending',
+                          ),
+                        );
+                      } else {
+                        return Container(); // Handle non-pending orders if necessary
                       }
-                      
                     },
                   )
                 : OfflineRequest(height: height, width: width),
@@ -100,11 +117,9 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                   icon: Ic.twotone_fact_check,
                   name: 'Orders',
                   onTap: () {
-                    print(orders.length);
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (c) {
                         return const OrdersView();
-                        
                       },
                     ));
                   },
@@ -134,7 +149,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (c) {
-                        return  MenuView(chefId: widget.chef_id,token: widget.token,);
+                        return MenuView(chefId: widget.chef_id, token: widget.token);
                       },
                     ));
                   },

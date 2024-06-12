@@ -31,7 +31,13 @@ class HomeScreenView extends StatefulWidget {
     required this.token,
     required this.chefId,
     required this.active,
-    required this.chef_mail, required this.resturant_name, required this.description, required this.chef_Fname, required this.chef_Lname, required this.wallet,required this.password
+    required this.chef_mail,
+    required this.resturant_name,
+    required this.description,
+    required this.chef_Fname,
+    required this.chef_Lname,
+    required this.wallet,
+    required this.password,
   }) : super(key: key);
 
   @override
@@ -52,7 +58,9 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     homeCubit.token = widget.token;
     homeCubit.chefId = widget.chefId;
     homeCubit.active = widget.active;
-    homeCubit.fetchOrders();  // Fetch orders when the screen initializes
+    if (online) {
+      homeCubit.fetchOrders(); // Fetch orders when the screen initializes if the initial state is online
+    }
   }
 
   @override
@@ -103,9 +111,13 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                     ),
                   ),
                   onTap: () {
+                    final wasOnline = online;
                     setState(() {
                       online = !online; // Toggle the value of online between true and false
                     });
+                    if (!wasOnline && online) {
+                      context.read<HomeCubit>().fetchOrders(); // Fetch orders only when changing from offline to online
+                    }
                     context.read<HomeCubit>().activeSwitch();
                   },
                 ),
@@ -115,39 +127,71 @@ class _HomeScreenViewState extends State<HomeScreenView> {
         ],
       ),
       drawer: BlocBuilder<AuthCubit, AuthState>(
-  builder: (context, state) {
-    if (state is LoginSuccessfullyState) {
-      final chef_id = state.chef_id;
-      final resturant_name = state.resturant_name;
-      final chef_mail = state.chef_mail;
-      final chef_Fname = state.chef_Fname;
-      final chef_Lname = state.chef_Lname;
-      final password = state.password;
-      final wallet = state.wallet;
-      final description = state.description;
-      final phone_number = state.phone_number;
-      final token = state.token;
-      return CustomDrawer(height: height, token: token,kitchenName: resturant_name , chef_mail: chef_mail, chef_Fname: chef_Fname, chef_Lname: chef_Lname, description: description,phone_number: phone_number,wallet: wallet,password: password,);
-    } else {
-      return CustomDrawer(height: height, token: '',kitchenName: '' , chef_mail: '', chef_Fname: '', chef_Lname: '', description: '', phone_number: 0, wallet: 0, password: '',); // Default kitchen name
-    }
-  },
-),
+        builder: (context, state) {
+          if (state is LoginSuccessfullyState) {
+            final chef_id = state.chef_id;
+            final resturant_name = state.resturant_name;
+            final chef_mail = state.chef_mail;
+            final chef_Fname = state.chef_Fname;
+            final chef_Lname = state.chef_Lname;
+            final password = state.password;
+            final wallet = state.wallet;
+            final description = state.description;
+            final phone_number = state.phone_number;
+            final token = state.token;
+            return CustomDrawer(
+              height: height,
+              token: token,
+              kitchenName: resturant_name,
+              chef_mail: chef_mail,
+              chef_Fname: chef_Fname,
+              chef_Lname: chef_Lname,
+              description: description,
+              phone_number: phone_number,
+              wallet: wallet,
+              password: password,
+            );
+          } else {
+            return CustomDrawer(
+              height: height,
+              token: '',
+              kitchenName: '',
+              chef_mail: '',
+              chef_Fname: '',
+              chef_Lname: '',
+              description: '',
+              phone_number: 0,
+              wallet: 0,
+              password: '',
+            ); // Default kitchen name
+          }
+        },
+      ),
       body: SafeArea(
-  child: BlocBuilder<HomeCubit, HomeState>(
-    builder: (context, state) {
-      if (state is HomeLoading) {
-        return Center(child: CircularProgressIndicator());
-      } else if (state is HomeOrdersLoaded) {
-        return HomeScreenBody(online: online, orders: state.orders,chef_id: widget.chefId, token: widget.token,);
-      } else if (state is HomeErrorState) {
-        return Center(child: Text(state.errorModel.message!));
-      } else {
-        return HomeScreenBody(online: online, orders: RequestModel(), token: widget.token,chef_id: widget.token,); // Pass an empty RequestModel
-      }
-    },
-  ),
-),
+        child: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            if (state is HomeLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is HomeOrdersLoaded) {
+              return HomeScreenBody(
+                online: online,
+                orders: state.orders,
+                chef_id: widget.chefId,
+                token: widget.token,
+              );
+            } else if (state is HomeErrorState) {
+              return Center(child: Text(state.errorModel.message!));
+            } else {
+              return HomeScreenBody(
+                online: online,
+                orders: RequestModel(),
+                token: widget.token,
+                chef_id: widget.chefId,
+              ); // Pass an empty RequestModel
+            }
+          },
+        ),
+      ),
     );
   }
 }

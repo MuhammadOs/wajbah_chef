@@ -18,6 +18,8 @@ import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit
 import 'features/Authentication/presentation/view/login_view/login_view.dart';
 import 'features/Authentication/presentation/view/signup_view/register_view.dart';
 import 'features/Authentication/presentation/view_model/auth_states.dart';
+import 'features/detailed_request/presentation/view/detailed_request_view.dart';
+import 'features/detailed_request/presentation/view_model/timer_bloc.dart';
 
 void main() {
   runApp(const WajbahChef());
@@ -50,6 +52,9 @@ class WajbahChef extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => MenuGetCubit(menuItemRepoImpl: MenuItemRepoImpl(menuRemoteSource: MenuRemoteSource(dio: Dio()))),
+        ),
+        BlocProvider<TimerBloc>(
+          create: (_) => TimerBloc(Duration.zero), 
         ),
       ],
       child: const WajbahApp(),
@@ -90,7 +95,6 @@ class WajbahApp extends StatelessWidget {
                 },
               );
             }
-            // Define other routes here if needed.
             return null;
           },
           routes: {
@@ -99,6 +103,9 @@ class WajbahApp extends StatelessWidget {
             "login": (context) => const LoginView(),
             "register": (context) => const MultiStepRegistration(),
             "profile": (context) => const LoginView(),
+            "requestView": (context) => const DetailedRequestView(
+              duration: Duration(seconds: 120), // Provide a non-null duration
+            ),
           },
         );
       },

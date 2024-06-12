@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 const wajbah_primary = Color(0xff4E68FB);
@@ -42,4 +44,35 @@ class AppConstants {
   static const chefRequests = "/OrderAPI/GetOrdersRequests";
   static const menuItems = "/MenuItemAPI/GetMenuItemsByChefId";
   static const postMenuItem = "/MenuItemAPI";
+}
+
+
+
+class TimerService {
+  late Timer _timer;
+  late Duration _duration;
+
+  Function(Duration)? _listener;
+
+  void start(Duration duration, Function(Duration) listener) {
+    _duration = duration;
+    _listener = listener;
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _updateTime();
+    });
+  }
+
+  void _updateTime() {
+    if (_duration.inSeconds > 0) {
+      _duration = _duration - Duration(seconds: 1);
+      _listener!(_duration);
+    } else {
+      _timer.cancel();
+    }
+  }
+
+  void cancelTimer() {
+    _timer.cancel();
+  }
 }
