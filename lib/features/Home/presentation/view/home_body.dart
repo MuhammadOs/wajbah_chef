@@ -116,9 +116,11 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                       online = !online; // Toggle the value of online between true and false
                     });
                     if (!wasOnline && online) {
+                      context.read<HomeCubit>().activeSwitch();
                       context.read<HomeCubit>().fetchOrders(); // Fetch orders only when changing from offline to online
+                    }else{
+                      context.read<HomeCubit>().activeSwitch();
                     }
-                    context.read<HomeCubit>().activeSwitch();
                   },
                 ),
               ],

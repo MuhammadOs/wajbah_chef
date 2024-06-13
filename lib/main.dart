@@ -18,6 +18,7 @@ import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit
 import 'features/Authentication/presentation/view/login_view/login_view.dart';
 import 'features/Authentication/presentation/view/signup_view/register_view.dart';
 import 'features/Authentication/presentation/view_model/auth_states.dart';
+import 'features/Dashboard/presentation/view/widgets/finance_view.dart';
 import 'features/detailed_request/presentation/view/detailed_request_view.dart';
 import 'features/detailed_request/presentation/view_model/timer_bloc.dart';
 
@@ -106,6 +107,7 @@ class WajbahApp extends StatelessWidget {
             "requestView": (context) => const DetailedRequestView(
               duration: Duration(seconds: 120), // Provide a non-null duration
             ),
+            "financeView": (context) => const FinanceView(),
           },
         );
       },

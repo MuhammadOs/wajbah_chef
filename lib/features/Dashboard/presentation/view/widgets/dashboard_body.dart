@@ -64,12 +64,17 @@ class DashBoardBody extends StatelessWidget {
                         color: 0xff0095FF,
                         icon: Mdi.handshake,
                       ),
-                      SmallDashboardContainer(
-                          height: height,
-                          width: width,
-                          color: 0xff329189,
-                          name: 'Finance',
-                          icon: Ic.round_account_balance_wallet)
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context,  'financeView');
+                        } ,
+                        child: SmallDashboardContainer(
+                            height: height,
+                            width: width,
+                            color: 0xff329189,
+                            name: 'Finance',
+                            icon: Ic.round_account_balance_wallet),
+                      )
                     ],
                   ),
                   SizedBox(

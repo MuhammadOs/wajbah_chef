@@ -57,10 +57,15 @@ class Result {
   int? customerId;
   List<MenuItems>? menuItems;
   String? chefId;
-
+  String?fname;
+  String?lname;
+  String? address;
   Result({
     this.orderId,
     this.notes,
+    this.address,
+    this.fname,
+    this.lname,
     this.totalPrice,
     this.subTotal,
     this.deliveryFees,
@@ -84,6 +89,9 @@ class Result {
     orderId = json['orderId'];
     notes = json['notes'];
     totalPrice = json['totalPrice'];
+    fname = json['customerFirstName'];
+    lname = json['customerLastName'];
+    address = json['address'];
     subTotal = json['subTotal'];
     deliveryFees = json['deliveryFees'];
     deliveryNumber = json['deliveryNumber'];
@@ -112,6 +120,9 @@ class Result {
     data['orderId'] = orderId;
     data['notes'] = notes;
     data['totalPrice'] = totalPrice;
+    data['customerFirstName'] = fname;
+    data['customerLastName'] = lname;
+    data['address'] = address;
     data['subTotal'] = subTotal;
     data['deliveryFees'] = deliveryFees;
     data['deliveryNumber'] = deliveryNumber;
