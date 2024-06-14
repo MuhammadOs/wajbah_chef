@@ -13,10 +13,10 @@ class HomeRepoImpl {
       await homeRemoteSource.activeSwitch(chefId, token);
       return const Right(null);
     } catch (exception) {
-      if (exception is DioException) {
+      if (exception is DioError) {
         return Left(exception);
       } else {
-        return Left(CashError());
+        return Left(CashError()); // Replace with appropriate custom error type
       }
     }
   }
@@ -26,10 +26,10 @@ class HomeRepoImpl {
       final result = await homeRemoteSource.fetchOrdersByChefId(chefId, token);
       return Right(result);
     } catch (exception) {
-      if (exception is DioException) {
+      if (exception is DioError) {
         return Left(exception);
       } else {
-        return Left(CashError());
+        return Left(CashError()); // Replace with appropriate custom error type
       }
     }
   }
