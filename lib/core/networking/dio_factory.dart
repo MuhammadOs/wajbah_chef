@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:wajbah_chef/core/constants/constants.dart';
 
 class DioFactory {
   DioFactory._();
@@ -12,7 +13,7 @@ class DioFactory {
     if (dio == null) {
       dio = Dio();
       dio!
-        ..options.baseUrl = 'https://wajbah-api.azurewebsites.net/api/'
+        ..options.baseUrl = AppConstants.baseUrl
         ..options.connectTimeout = timeOut
         ..options.receiveTimeout = timeOut;
       if (kDebugMode) {

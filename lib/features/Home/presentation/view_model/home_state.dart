@@ -1,4 +1,3 @@
-import 'package:wajbah_chef/core/errors/error_model.dart';
 import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
 
 abstract class HomeState {}
@@ -25,7 +24,10 @@ class HomeOrdersLoaded extends HomeState {
 
 
 class HomeErrorState extends HomeState {
-  final ErrorModel errorModel;
+  String errMessage;
 
-  HomeErrorState({required this.errorModel});
+  HomeErrorState({required this.errMessage});
+
+  @override
+  String toString() => 'Get kitchen { errMessage: $errMessage }';
 }

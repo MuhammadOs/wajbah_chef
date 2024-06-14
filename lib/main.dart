@@ -11,6 +11,7 @@ import 'package:wajbah_chef/features/Home/presentation/view/home_body.dart';
 import 'package:wajbah_chef/features/Home/presentation/view_model/home_cubit.dart';
 import 'package:wajbah_chef/features/OnBoarding/presentations/view/onboarding.dart';
 import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
+import 'package:wajbah_chef/features/detailed_request/presentation/view_model/timer_bloc.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuItem_remotesource.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuitem_repo_impl.dart';
 import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit.dart';
@@ -18,12 +19,20 @@ import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit
 import 'features/Authentication/presentation/view/login_view/login_view.dart';
 import 'features/Authentication/presentation/view/signup_view/register_view.dart';
 import 'features/Authentication/presentation/view_model/auth_states.dart';
-import 'features/Dashboard/presentation/view/widgets/finance_view.dart';
-import 'features/detailed_request/presentation/view/detailed_request_view.dart';
-import 'features/detailed_request/presentation/view_model/timer_bloc.dart';
 
 void main() {
-  runApp(const WajbahChef());
+  runApp(
+    BlocProvider(
+      create: (context) => AuthCubit(
+        authRepoImpl: AuthRepoImpl(
+          authRemoteResource: AuthRemoteResource(
+            dio: DioFactory.getDio(),
+          ),
+        ),
+      ),
+      child: const WajbahChef(),
+    ),
+  );
 }
 
 class WajbahChef extends StatelessWidget {
@@ -31,35 +40,34 @@ class WajbahChef extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => AuthCubit(
-            authRepoImpl: AuthRepoImpl(
-              authRemoteResource: AuthRemoteResource(
-                dio: DioFactory.getDio(),
-              ),
-            ),
+    return BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+      final authCubit = context.read<AuthCubit>();
+      final token = authCubit.token;
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => HomeCubit(
+                homeRepoImpl: HomeRepoImpl(
+                  homeRemoteSource: HomeRemoteSource(
+                    dio: DioFactory.getDio(),
+                  ),
+                ),
+                token ?? ""),
           ),
-        ),
-        BlocProvider(
-          create: (context) => HomeCubit(
-            homeRepoImpl: HomeRepoImpl(
-              homeRemoteSource: HomeRemoteSource(
-                dio: DioFactory.getDio(),
-              ),
-            ),
+          BlocProvider(
+            create: (context) => MenuGetCubit(
+                menuItemRepoImpl: MenuItemRepoImpl(
+                    menuRemoteSource:
+                        MenuRemoteSource(dio: DioFactory.getDio())),
+                token ?? ""),
           ),
-        ),
-        BlocProvider(
-          create: (context) => MenuGetCubit(menuItemRepoImpl: MenuItemRepoImpl(menuRemoteSource: MenuRemoteSource(dio: Dio()))),
-        ),
-        BlocProvider<TimerBloc>(
-          create: (_) => TimerBloc(Duration.zero), 
-        ),
-      ],
-      child: const WajbahApp(),
-    );
+          BlocProvider<TimerBloc>(
+            create: (_) => TimerBloc(Duration.zero),
+          ),
+        ],
+        child: const WajbahApp(),
+      );
+    });
   }
 }
 
@@ -68,48 +76,17 @@ class WajbahApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = getAuthCubit(context);
-    return BlocBuilder<AuthCubit, AuthState>(
-      builder: (context, state) {
-        final token = authCubit.getToken;
-        return MaterialApp(
-          theme: ThemeData(fontFamily: "Biryani", canvasColor: Colors.white),
-          debugShowCheckedModeBanner: false,
-          home: const LoginView(),
-          onGenerateRoute: (settings) {
-            if (settings.name == 'home') {
-              final args = settings.arguments as Map<String, dynamic>;
-              return MaterialPageRoute(
-                builder: (context) {
-                  return HomeScreenView(
-                    token: args['token'],
-                    chefId: args['chefId'],
-                    active: args['active'],
-                    chef_mail: args['chef_mail'],
-                    resturant_name: args['resturant_name'],
-                    chef_Fname: args['chef_Fname'],
-                    chef_Lname: args['chef_Lname'],
-                    wallet: args['wallet'],
-                    description: args['description'],
-                    password: args['password'],
-                  );
-                },
-              );
-            }
-            return null;
-          },
-          routes: {
-            "onboarding": (context) => const OnBoardingScreen(),
-            "orders": (context) => const OrdersView(),
-            "login": (context) => const LoginView(),
-            "register": (context) => const MultiStepRegistration(),
-            "profile": (context) => const LoginView(),
-            "requestView": (context) => const DetailedRequestView(
-              duration: Duration(seconds: 120), // Provide a non-null duration
-            ),
-            "financeView": (context) => const FinanceView(),
-          },
-        );
+    return MaterialApp(
+      theme: ThemeData(fontFamily: "Biryani", canvasColor: Colors.white),
+      debugShowCheckedModeBanner: false,
+      home: const LoginView(),
+      routes: {
+        "onboarding": (context) => const OnBoardingScreen(),
+        "orders": (context) => const OrdersView(),
+        "login": (context) => const LoginView(),
+        "home": (context) => const HomeScreenView(),
+        "register": (context) => const MultiStepRegistration(),
+        "profile": (context) => const LoginView(),
       },
     );
   }

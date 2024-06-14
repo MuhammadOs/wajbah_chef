@@ -1,54 +1,42 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wajbah_chef/core/errors/error_handler.dart';
-import 'package:wajbah_chef/features/menu/data/model/menu_item_model.dart';
+import 'package:wajbah_chef/features/menu/data/model/get_menu_item_model/menu_item_model.dart';
+import 'package:wajbah_chef/features/menu/data/model/post_menu_item_model/Post_menu_item_request.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuitem_repo_impl.dart';
 import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_states.dart';
 
 class MenuGetCubit extends Cubit<MenuGetState> {
   final MenuItemRepoImpl menuItemRepoImpl;
+  final String token; // Store the token
 
-  MenuGetCubit({required this.menuItemRepoImpl}) : super(InitialMenuGetState());
+  MenuGetCubit(this.token, {required this.menuItemRepoImpl})
+      : super(InitialMenuGetState());
 
-  Future<void> fetchMenuItemsByID({required String chefId, required String token}) async {
-    try {
-      emit(MenuGetStateLoading());
-      final result = await menuItemRepoImpl.fetchMenuItemsByID(chefId, token);
-      result.fold(
-        (exception) {
-          if (exception is DioException) {
-            print('DioError: ${exception.message}');
-            print('DioError Response: ${exception.response?.data}');
-          } else {
-            print('Exception: ${exception.toString()}');
-          }
-          emit(MenuGetErrorState(errorModel: ErrorHandler.errorModel));
-        },
-        (map) {
-          final menuItemModel = MenuItemModel.fromJson(map);
-          emit(MenuGetStateLoaded(menuItemModel));
-        },
-      );
-    } catch (e) {
-      print('Error in fetchMenuItemsByID: $e');
-      emit(MenuGetErrorState(errorModel: ErrorHandler.errorModel));
-    }
+  Future<void> fetchMenuItemsByID({required String chefId}) async {
+    emit(MenuGetStateLoading());
+    final response = await menuItemRepoImpl.fetchMenuItemsByID(chefId, token);
+    response.fold(
+      (exception) {
+        emit(MenuGetErrorState(errMessage: exception.toString()));
+      },
+      (menuItemModel) {
+        //final menuItemModel = MenuItemModel.fromJson(map);
+        emit(MenuGetStateLoaded(menuItemModel));
+      },
+    );
   }
 
-  Future<void> postMenuItem(MenuItem menuItem, String token) async {
-    try {
-      emit(MenuGetStateLoading());
-      final result = await menuItemRepoImpl.postMenuItem(menuItem, token);
-      result.fold(
-        (exception) {
-          print('DioError: ${exception.toString()}');
-          emit(MenuGetErrorState(errorModel: ErrorHandler.errorModel));
-        },
-        (_) => emit(MenuPostStateSuccess()),
-      );
-    } catch (e) {
-      print('Error in postMenuItem: $e');
-      emit(MenuGetErrorState(errorModel: ErrorHandler.errorModel));
-    }
+  Future<void> postMenuItem(
+      PostMenuItemRequest postMenuItemRequest, String chefId) async {
+    emit(MenuGetStateLoading());
+    final result =
+        await menuItemRepoImpl.postMenuItem(postMenuItemRequest, token, chefId);
+    result.fold(
+      (exception) {
+        emit(MenuGetErrorState(errMessage: exception.toString()));
+      },
+      (postMenuItemRequest) => emit(MenuPostStateSuccess(postMenuItemRequest)),
+    );
   }
 }

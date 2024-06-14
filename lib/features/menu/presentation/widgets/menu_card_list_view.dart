@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
-import 'package:wajbah_chef/features/menu/data/model/menu_item_model.dart';
+import 'package:wajbah_chef/features/menu/data/model/get_menu_item_model/menu_item_model.dart';
+import 'package:wajbah_chef/features/menu/data/model/menu_item.dart';
 import 'menu_card.dart';
 
 class MenuCardListView extends StatelessWidget {

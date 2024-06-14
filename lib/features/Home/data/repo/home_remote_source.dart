@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
 
 class HomeRemoteSource {
@@ -10,25 +11,27 @@ class HomeRemoteSource {
     try {
       final response = await dio.post(
         AppConstants.ActiveSwitch,
-        queryParameters: {'id': chefId},  // Use queryParameters instead of data
+        queryParameters: {'id': chefId},
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
-            'Content-Type': 'application/json', // Explicitly set content type
+            'Content-Type': 'application/json',
           },
         ),
       );
-      print('Response status: ${response.statusCode}');
-      print('Response data: ${response.data}');
+      return response.data;
     } catch (e) {
-      if (e is DioException) {
-        print('DioException: ${e.response?.data}');
+      if (e is DioError) {
+        if (kDebugMode) {
+          print('DioException: ${e.response?.data}');
+        }
       }
-      throw e;
+      rethrow;
     }
   }
 
-  Future<Map<String, dynamic>> fetchOrdersByChefId(String chefId, String token) async {
+  Future<Map<String, dynamic>> fetchOrdersByChefId(
+      String chefId, String token) async {
     try {
       final response = await dio.get(
         AppConstants.chefRequests,
@@ -41,10 +44,12 @@ class HomeRemoteSource {
       );
       return response.data;
     } catch (e) {
-      if (e is DioException) {
-        print('DioException: ${e.response?.data}');
+      if (e is DioError) {
+        if (kDebugMode) {
+          print('DioException: ${e.response?.data}');
+        }
       }
-      throw e;
+      rethrow;
     }
   }
 }

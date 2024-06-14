@@ -15,52 +15,25 @@ import 'package:wajbah_chef/features/Home/presentation/view_model/home_cubit.dar
 import 'package:wajbah_chef/features/Home/presentation/view_model/home_state.dart';
 
 class HomeScreenView extends StatefulWidget {
-  final String token;
-  final String chefId;
-  final bool active;
-  final String chef_mail;
-  final String resturant_name;
-  final String description;
-  final String chef_Fname;
-  final String chef_Lname;
-  final String wallet;
-  final String password;
-
-  const HomeScreenView({
-    Key? key,
-    required this.token,
-    required this.chefId,
-    required this.active,
-    required this.chef_mail,
-    required this.resturant_name,
-    required this.description,
-    required this.chef_Fname,
-    required this.chef_Lname,
-    required this.wallet,
-    required this.password,
-  }) : super(key: key);
+  const HomeScreenView({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreenView> createState() => _HomeScreenViewState();
+  _HomeScreenViewState createState() => _HomeScreenViewState();
 }
 
 class _HomeScreenViewState extends State<HomeScreenView> {
   bool online = true;
+  String chefId = "";
+  String token = "";
 
   @override
   void initState() {
     super.initState();
-    print("Token: ${widget.token}");
-    print("Chef ID: ${widget.chefId}");
-    print("Active Status: ${widget.active}");
-    online = widget.active; // Set the initial online status based on the active status
-    final homeCubit = context.read<HomeCubit>();
-    homeCubit.token = widget.token;
-    homeCubit.chefId = widget.chefId;
-    homeCubit.active = widget.active;
-    if (online) {
-      homeCubit.fetchOrders(); // Fetch orders when the screen initializes if the initial state is online
-    }
+    final authCubit = context.read<AuthCubit>();
+    chefId = authCubit.getChefId ?? "";
+    token = authCubit.getToken ?? "";
+    online = authCubit.getActive ?? false;
+    context.read<HomeCubit>().initialize(chefId: chefId, active: online);
   }
 
   @override
@@ -76,9 +49,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: () {
-            _scaffoldKey.currentState!.openDrawer();
-          },
+          onPressed: () => _scaffoldKey.currentState!.openDrawer(),
           icon: Iconify(
             Prime.align_left,
             color: wajbah_black,
@@ -96,104 +67,108 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                 ),
                 SizedBox(width: width * 0.03),
                 InkWell(
+                  onTap: _toggleOnlineStatus,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(23),
                       color: online ? wajbah_primary : wajbah_gray,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.all(7.0),
-                      child: Iconify(
-                        Mdi.wireless,
-                        color: wajbah_white,
-                        size: width * 0.067,
-                      ),
+                    padding: const EdgeInsets.all(7.0),
+                    child: Iconify(
+                      Mdi.wireless,
+                      color: wajbah_white,
+                      size: width * 0.067,
                     ),
                   ),
-                  onTap: () {
-                    final wasOnline = online;
-                    setState(() {
-                      online = !online; // Toggle the value of online between true and false
-                    });
-                    if (!wasOnline && online) {
-                      context.read<HomeCubit>().activeSwitch();
-                      context.read<HomeCubit>().fetchOrders(); // Fetch orders only when changing from offline to online
-                    }else{
-                      context.read<HomeCubit>().activeSwitch();
-                    }
-                  },
                 ),
               ],
             ),
           ),
         ],
       ),
-      drawer: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          if (state is LoginSuccessfullyState) {
-            final chef_id = state.chef_id;
-            final resturant_name = state.resturant_name;
-            final chef_mail = state.chef_mail;
-            final chef_Fname = state.chef_Fname;
-            final chef_Lname = state.chef_Lname;
-            final password = state.password;
-            final wallet = state.wallet;
-            final description = state.description;
-            final phone_number = state.phone_number;
-            final token = state.token;
-            return CustomDrawer(
-              height: height,
-              token: token,
-              kitchenName: resturant_name,
-              chef_mail: chef_mail,
-              chef_Fname: chef_Fname,
-              chef_Lname: chef_Lname,
-              description: description,
-              phone_number: phone_number,
-              wallet: wallet,
-              password: password,
-            );
-          } else {
-            return CustomDrawer(
-              height: height,
-              token: '',
-              kitchenName: '',
-              chef_mail: '',
-              chef_Fname: '',
-              chef_Lname: '',
-              description: '',
-              phone_number: 0,
-              wallet: 0,
-              password: '',
-            ); // Default kitchen name
-          }
-        },
-      ),
+      drawer: _buildDrawer(height),
       body: SafeArea(
         child: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {
             if (state is HomeLoading) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator.adaptive());
             } else if (state is HomeOrdersLoaded) {
               return HomeScreenBody(
                 online: online,
                 orders: state.orders,
-                chef_id: widget.chefId,
-                token: widget.token,
+                token: token,
+                chef_id: chefId,
               );
             } else if (state is HomeErrorState) {
-              return Center(child: Text(state.errorModel.message!));
+              return Center(child: Text(state.errMessage));
             } else {
               return HomeScreenBody(
                 online: online,
                 orders: RequestModel(),
-                token: widget.token,
-                chef_id: widget.chefId,
-              ); // Pass an empty RequestModel
+                token: token,
+                chef_id: chefId,
+              );
             }
           },
         ),
       ),
     );
+  }
+
+  Widget _buildDrawer(double height) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        if (state is LoginSuccessfullyState) {
+          return CustomDrawer(
+            height: height,
+            token: state.token,
+            kitchenName: state.resturant_name,
+            chef_mail: state.chef_mail,
+            chef_Fname: state.chef_Fname,
+            chef_Lname: state.chef_Lname,
+            description: state.description,
+            phone_number: state.phone_number,
+            wallet: state.wallet,
+            password: state.password,
+          );
+        } else {
+          return CustomDrawer(
+            height: height,
+            token: '',
+            kitchenName: '',
+            chef_mail: '',
+            chef_Fname: '',
+            chef_Lname: '',
+            description: '',
+            phone_number: 0,
+            wallet: 0,
+            password: '',
+          );
+        }
+      },
+    );
+  }
+
+  void _toggleOnlineStatus() async {
+    final wasOnline = online;
+    setState(() {
+      online = !online;
+    });
+    final homeCubit = context.read<HomeCubit>();
+
+    try {
+      if (!wasOnline && online) {
+        await homeCubit.activeSwitch();
+        await homeCubit.fetchOrders();
+      } else {
+        await homeCubit.activeSwitch();
+      }
+    } catch (e) {
+      // Revert the online status if there is an error
+      setState(() {
+        online = wasOnline;
+      });
+      print('Error toggling online status: $e');
+    }
   }
 }

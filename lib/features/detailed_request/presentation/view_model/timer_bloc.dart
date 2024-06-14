@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class TimerBloc extends Bloc<TimerEvent, Duration> {
   late Timer _timer;
 
-  TimerBloc(Duration initialState) : super(initialState) {
-    // Add event handlers
+  TimerBloc(super.initialState) {
     on<StartTimer>((event, emit) {
       _startTimer(event.duration);
     });
@@ -33,10 +32,12 @@ abstract class TimerEvent {}
 
 class StartTimer extends TimerEvent {
   final Duration duration;
+
   StartTimer(this.duration);
 }
 
 class UpdateTimer extends TimerEvent {
   final int seconds;
+
   UpdateTimer(this.seconds);
 }

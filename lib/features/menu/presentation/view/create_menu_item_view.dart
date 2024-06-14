@@ -2,19 +2,22 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/styles.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
-import 'package:wajbah_chef/features/menu/data/model/menu_item_model.dart';
+import 'package:wajbah_chef/features/menu/data/model/get_menu_item_model/menu_item_model.dart';
+import 'package:wajbah_chef/features/menu/data/model/menu_item.dart';
+import 'package:wajbah_chef/features/menu/data/model/post_menu_item_model/Post_menu_item_request.dart';
+import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit.dart';
+import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_states.dart';
 import '../../../../core/sizeConfig.dart';
 import '../../../Authentication/presentation/view/widgets/custom_button.dart';
-import '../../data/menu_item.dart';
+import '../../data/model/size_prices.dart';
 
 class CreateRoomView extends StatefulWidget {
   final Function(MenuItem) onMenuItemCreated;
-
 
   const CreateRoomView({Key? key, required this.onMenuItemCreated})
       : super(key: key);
@@ -24,15 +27,6 @@ class CreateRoomView extends StatefulWidget {
 }
 
 class _CreateRoomViewState extends State<CreateRoomView> {
-
-  List<MenuItem> menuItems = [];
-
-  void addRoom(MenuItem menuItem) {
-    setState(() {
-      menuItems.add(menuItem);
-    });
-  }
-
   File? _profileImage;
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -302,58 +296,87 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                           ],
                         ),
                       ),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: width * 0.3,
-                            child: CustomButton(
-                              onPressed: () async {
-                                if (_itemNameController.text.isEmpty ||
-                                    _descriptionController.text.isEmpty) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('Incomplete Form'),
-                                        content: const SingleChildScrollView(
-                                          child: ListBody(
-                                            children: <Widget>[
-                                              Text(
-                                                  'Please fill in all fields.'),
-                                            ],
-                                          ),
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('OK'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                  return;
-                                }
-                                final MenuItem newRoom = MenuItem(
-                                  name: _itemNameController.text,
-                                  
-                                  rate: 30000,
-                                  description: _descriptionController.text,
+                      BlocConsumer<MenuGetCubit, MenuGetState>(
+                        listener: (context, state) {
+                          if (state is MenuGetErrorState) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(state.errMessage)),
+                            );
+                          } else if (state is MenuPostStateSuccess) {
+                            Navigator.popUntil(context, ModalRoute.withName("home"));
+                          }
+                        },
+                        builder: (context, state) {
+                          return (state is MenuGetStateLoading)
+                              ? const Center(child: CircularProgressIndicator())
+                              : Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SizedBox(
+                                      width: width * 0.3,
+                                      child: CustomButton(
+                                        color: wajbah_primary,
+                                        onPressed: () async {
+                                          if (_itemNameController
+                                                  .text.isEmpty ||
+                                              _descriptionController
+                                                  .text.isEmpty) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: const Text('Error'),
+                                                  content: const Text(
+                                                      'Please fill in all the required fields.'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: const Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                            return;
+                                          }
+
+                                          PostMenuItemRequest newItem =
+                                              PostMenuItemRequest(
+                                            name: _itemNameController.text,
+                                            description:
+                                                _descriptionController.text,
+                                            category: _categoryController.text,
+                                            estimatedTime:
+                                                _prepTimeController.text,
+                                            photo: "https://th.bing.com/th/id/R.f59dbcc0d79d84a5971ddf09f722f56c?rik=fD9SfX6o%2baYmTA&pid=ImgRaw&r=0",
+                                            chefId: "30203262301013",
+                                            healthyMode: false,
+                                            occassions: "all time",
+                                            orderingTime:
+                                                _prepTimeController.text,
+                                            sizesPrices: SizesPrices(
+                                                priceLarge: 120,
+                                                priceMedium: 100,
+                                                priceSmall: 80),
+                                          );
+
+                                          // Post the new menu item using the cubit
+                                          BlocProvider.of<MenuGetCubit>(context)
+                                              .postMenuItem(
+                                                  newItem, "30203262301013");
+                                        },
+                                        text: "Save",
+                                      ),
+                                    ),
+                                  ),
                                 );
-                                widget.onMenuItemCreated(newRoom);
-                                Navigator.pop(context);
-                              },
-                              text: 'Save',
-                              color: wajbah_primary,
-                            ),
-                          ),
-                        ),
+                        },
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

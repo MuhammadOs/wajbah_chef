@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/styles.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
-import 'package:wajbah_chef/features/menu/data/model/menu_item_model.dart';
+import 'package:wajbah_chef/features/menu/data/model/get_menu_item_model/menu_item_model.dart';
+import 'package:wajbah_chef/features/menu/data/model/menu_item.dart';
+import 'package:wajbah_chef/features/menu/presentation/view/create_menu_item_view.dart';
 import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit.dart';
 import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_states.dart';
-import 'package:wajbah_chef/features/menu/presentation/widgets/room_card_list_view.dart';
+import 'package:wajbah_chef/features/menu/presentation/widgets/menu_card_list_view.dart';
 
 class MenuViewBody extends StatefulWidget {
   final String chefId;
@@ -21,6 +23,7 @@ class MenuViewBody extends StatefulWidget {
 class _MenuViewBodyState extends State<MenuViewBody>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<MenuItem> menuItems = [];
 
   @override
   void initState() {
@@ -29,7 +32,13 @@ class _MenuViewBodyState extends State<MenuViewBody>
     final menuCubit = context.read<MenuGetCubit>();
     print('chef id : ${widget.chefId}');
     print('token : ${widget.token}');
-    menuCubit.fetchMenuItemsByID(chefId: widget.chefId, token: widget.token);
+    menuCubit.fetchMenuItemsByID(chefId: widget.chefId);
+  }
+
+  void addRoom(MenuItem menuItem) {
+    setState(() {
+      menuItems.add(menuItem);
+    });
   }
 
   @override
@@ -39,15 +48,32 @@ class _MenuViewBodyState extends State<MenuViewBody>
       body: BlocBuilder<MenuGetCubit, MenuGetState>(
         builder: (context, state) {
           if (state is MenuGetStateLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           } else if (state is MenuGetStateLoaded) {
             return _buildLoadedState(state.menuItemModel);
           } else if (state is MenuGetErrorState) {
-            return Center(child: Text("Error loading menu items"));
+            return Center(
+                child: Text("Error loading menu items: ${state.errMessage}"));
           } else {
-            return Center(child: Text("No menu items available"));
+            return const Center(child: Text("No menu items available"));
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (c) {
+              return CreateRoomView(onMenuItemCreated: addRoom);
+            },
+          ));
+        },
+        backgroundColor: wajbah_green_light,
+        shape: const CircleBorder(),
+        child: const Icon(
+          Icons.add,
+          color: wajbah_green,
+          size: 30,
+        ),
       ),
     );
   }
@@ -86,7 +112,9 @@ class _MenuViewBodyState extends State<MenuViewBody>
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: _tabController.index == index ? wajbah_primary : wajbah_gray_light,
+          color: _tabController.index == index
+              ? wajbah_primary
+              : wajbah_gray_light,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
@@ -105,19 +133,24 @@ class _MenuViewBodyState extends State<MenuViewBody>
     List<MenuItem> filteredItems;
     switch (_tabController.index) {
       case 0:
-        filteredItems = items.where((item) => item.category == 'Grilled').toList();
+        filteredItems =
+            items.where((item) => item.category == 'Grilled').toList();
         break;
       case 1:
-        filteredItems = items.where((item) => item.category == 'Oriental').toList();
+        filteredItems =
+            items.where((item) => item.category == 'Oriental').toList();
         break;
       case 2:
-        filteredItems = items.where((item) => item.category == 'Greeny').toList();
+        filteredItems =
+            items.where((item) => item.category == 'Greeny').toList();
         break;
       case 3:
-        filteredItems = items.where((item) => item.category == 'Desserts').toList();
+        filteredItems =
+            items.where((item) => item.category == 'Desserts').toList();
         break;
       case 4:
-        filteredItems = items.where((item) => item.category == 'Offers').toList();
+        filteredItems =
+            items.where((item) => item.category == 'Offers').toList();
         break;
       default:
         filteredItems = items;
@@ -128,9 +161,9 @@ class _MenuViewBodyState extends State<MenuViewBody>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset("assets/images/menu/empty_menu.png"),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               const Text("Looks like you haven’t uploaded any menu yet"),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               const Text("Tap the + button to upload your first menu"),
             ],
           )

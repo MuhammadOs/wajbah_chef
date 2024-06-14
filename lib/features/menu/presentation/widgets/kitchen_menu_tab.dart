@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wajbah_chef/features/menu/presentation/view/menu_items_view.dart';
-import 'package:wajbah_chef/features/menu/presentation/widgets/chat_room_view_widgets/menu_view_body.dart';
+import 'package:wajbah_chef/features/menu/presentation/widgets/menu_view_widgets/menu_view_body.dart';
 import '../../../../../core/styles.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/sizeConfig.dart';
@@ -87,7 +86,10 @@ class _KitchenMenuTabState extends State<KitchenMenuTab>
                     style: Styles.titleMedium.copyWith(fontSize: width * 0.05),
                   ),
                 ),
-                MenuViewBody(token: '', chefId: '',)
+                MenuViewBody(
+                  token: '',
+                  chefId: '',
+                )
               ],
             ),
         ],
