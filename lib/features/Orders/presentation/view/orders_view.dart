@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'widgets/orders_body.dart';
 
 class OrdersView extends StatelessWidget {
-  const OrdersView({super.key});
+  final String chefId;
+  final String token;
+  const OrdersView({super.key, required this.chefId, required this.token});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
       backgroundColor: Colors.white,
-      body: OrdersBody(),
+      body: OrdersBody(chefId: chefId,token:token ,),
     );
   }
 }

@@ -1,26 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:wajbah_chef/core/sizeConfig.dart';
-import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
-import 'package:wajbah_chef/features/Orders/data/served.dart';
-import 'package:wajbah_chef/features/Orders/data/serving_now.dart';
-import 'package:wajbah_chef/features/Orders/presentation/view/widgets/custom_tabbar.dart';
-import 'package:wajbah_chef/features/Orders/presentation/view/widgets/serving_now_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
+
+import '../../../../../core/widgets/custom_appbar.dart';
+import '../../view_model/track_orders_cubit.dart';
+import '../../view_model/track_orders_state.dart';
+import 'custom_tabbar.dart';
+import 'serving_now_item.dart';
 
 class OrdersBody extends StatefulWidget {
-  const OrdersBody({Key? key}) : super(key: key);
+  final String chefId;
+  final String token;
+
+  const OrdersBody({
+    Key? key,
+    required this.chefId,
+    required this.token,
+  }) : super(key: key);
 
   @override
   _OrdersBodyState createState() => _OrdersBodyState();
 }
 
-class _OrdersBodyState extends State<OrdersBody>
-    with SingleTickerProviderStateMixin {
+class _OrdersBodyState extends State<OrdersBody> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<Result> preparingOrders = [];
+  List<Result> cookingOrders = [];
+  List<Result> deliveringOrders = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
+    context.read<TrackOrdersCubit>().initialize(chefId: widget.chefId, active: true);
+    context.read<TrackOrdersCubit>().trackOrders();
   }
 
   @override
@@ -31,63 +44,119 @@ class _OrdersBodyState extends State<OrdersBody>
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    double width = SizeConfig.screenW!;
-    double height = SizeConfig.screenH!;
     return SafeArea(
       child: Column(
         children: [
           CustomAppBar(title: 'My Orders'),
-          CustomTabBar(width: width, tabController: _tabController),
+          CustomTabBar(
+            width: MediaQuery.of(context).size.width,
+            tabController: _tabController,
+          ),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: Serving_data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        child: ServingListItem(
-                            height: height,
-                            width: width,
-                            OrderId: Serving_data[index].Request_ID,
-                            Client_name: Serving_data[index].Requester_name,
-                            Client_location:
-                                Serving_data[index].Requester_location,
-                            Order_Price: Serving_data[index].Item_price,
-                            Order_name: Serving_data[index].Item_name,
-                            Order_item_count: Serving_data[index].num_of_items,
-                            Available_time: Serving_data[index].Available_time),
-                      );
-                    }),
-                ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: Served_data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        child: ServingListItem(
-                            height: height,
-                            width: width,
-                            OrderId: Served_data[index].Request_ID,
-                            Client_name: Served_data[index].Requester_name,
-                            Client_location:
-                                Served_data[index].Requester_location,
-                            Order_Price: Served_data[index].Item_price,
-                            Order_name: Served_data[index].Item_name,
-                            Order_item_count: Served_data[index].num_of_items,
-                            Available_time: Served_data[index].Available_time),
-                      );
-                    }),
-              ],
+            child: BlocBuilder<TrackOrdersCubit, TrackState>(
+              builder: (context, state) {
+                if (state is TrackStateLoading) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (state is TrackStateLoaded) {
+                  final orders = state.orders.result ?? [];
+                  preparingOrders = orders.where((order) => order.status == 'Preparing').toList();
+                  cookingOrders = orders.where((order) => order.status == 'Cooking').toList();
+                  deliveringOrders = orders.where((order) => order.status == 'Delivering').toList();
+
+                  print('Preparing Orders Count: ${preparingOrders.length}');
+                  print('Cooking Orders Count: ${cookingOrders.length}');
+                  print('Delivering Orders Count: ${deliveringOrders.length}');
+
+                  return TabBarView(
+                    controller: _tabController,
+                    children: [
+                      buildPreparingOrderList(),
+                      buildCookingOrderList(),
+                      buildDeliveringOrderList(),
+                    ],
+                  );
+                } else if (state is TrackErrorState) {
+                  return Center(child: Text('Error: ${state.errMessage}'));
+                } else {
+                  return Center(child: Text('No Orders Available'));
+                }
+              },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildPreparingOrderList() {
+    return ListView.builder(
+      itemCount: preparingOrders.length,
+      itemBuilder: (context, index) {
+        final order = preparingOrders[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: ServingListItem(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            state: order.status!,
+            OrderId: order.orderId ?? 0,
+            Client_name: '${order.fname ?? ''} ${order.lname ?? ''}',
+            Client_location: order.address ?? 'Unknown location',
+            Order_Price: order.totalPrice ?? 0,
+            Order_name: order.menuItems?.map((item) => item.name).join(', ') ?? 'No items',
+            Order_item_count: order.menuItems?.length ?? 0,
+            Available_time: order.estimatedTime ?? 'Unknown time',
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildCookingOrderList() {
+    return ListView.builder(
+      itemCount: cookingOrders.length,
+      itemBuilder: (context, index) {
+        final order = cookingOrders[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: ServingListItem(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            OrderId: order.orderId ?? 0,
+            state: order.status!,
+            Client_name: '${order.fname ?? ''} ${order.lname ?? ''}',
+            Client_location: order.address ?? 'Unknown location',
+            Order_Price: order.totalPrice ?? 0,
+            Order_name: order.menuItems?.map((item) => item.name).join(', ') ?? 'No items',
+            Order_item_count: order.menuItems?.length ?? 0,
+            Available_time: order.estimatedTime ?? 'Unknown time',
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildDeliveringOrderList() {
+    return ListView.builder(
+      itemCount: deliveringOrders.length,
+      itemBuilder: (context, index) {
+        final order = deliveringOrders[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: ServingListItem(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            OrderId: order.orderId ?? 0,
+            state: order.status!,
+            Client_name: '${order.fname ?? ''} ${order.lname ?? ''}',
+            Client_location: order.address ?? 'Unknown location',
+            Order_Price: order.totalPrice ?? 0,
+            Order_name: order.menuItems?.map((item) => item.name).join(', ') ?? 'No items',
+            Order_item_count: order.menuItems?.length ?? 0,
+            Available_time: order.estimatedTime ?? 'Unknown time',
+          ),
+        );
+      },
     );
   }
 }

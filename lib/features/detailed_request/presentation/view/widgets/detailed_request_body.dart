@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/icons/ic.dart';
@@ -8,8 +7,10 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/styles.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
+import 'package:wajbah_chef/core/widgets/order_state.dart';
 import 'package:wajbah_chef/features/Home/data/requests_item.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view/widgets/custom_info_listtile.dart';
+import '../../view_model/accept_order_cubit.dart';
 import '../../view_model/timer_bloc.dart';
 import 'cutom_divider.dart';
 import 'order_details_widget.dart';
@@ -72,7 +73,7 @@ class _DetailedRequestBodyState extends State<DetailedRequestBody> {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         if (_duration.inSeconds > 0) {
-          _duration = _duration;
+          _duration = _duration - Duration(seconds: 1);
         } else {
           _timer.cancel();
         }
@@ -80,10 +81,18 @@ class _DetailedRequestBodyState extends State<DetailedRequestBody> {
     });
   }
 
+  void _acceptOrder() {
+  final stateCubit = context.read<StateCubit>();
+  if (arg != null) {
+    stateCubit.initialize(orderId: int.parse(arg!.Request_ID), state: OrderState.currentState);
+    stateCubit.updateOrderState();
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimerBloc, Duration>(
-      builder: (context, Duration) {
+      builder: (context, duration) {
         return SafeArea(
           child: Stack(
             children: [
@@ -180,7 +189,7 @@ class _DetailedRequestBodyState extends State<DetailedRequestBody> {
                 left: 100,
                 child: FloatingActionButton(
                   backgroundColor: wajbah_primary.withOpacity(0.9),
-                  onPressed: () {},
+                  onPressed: _acceptOrder,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Row(

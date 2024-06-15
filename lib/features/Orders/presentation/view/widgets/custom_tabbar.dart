@@ -33,11 +33,12 @@ class CustomTabBar extends StatelessWidget {
           controller: _tabController,
           tabs: const [
             Tab(
-              text: 'Serving Now',
+              text: 'Preparing',
             ),
             Tab(
-              text: 'Served',
+              text: 'Cooking',
             ),
+            Tab(text: 'Delivering',)
           ],
         ),
       ),

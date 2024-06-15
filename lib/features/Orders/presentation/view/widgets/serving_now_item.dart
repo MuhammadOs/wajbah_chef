@@ -1,13 +1,13 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/gg.dart';
 import 'package:iconify_flutter/icons/ic.dart';
-import 'package:iconify_flutter/icons/mdi.dart';
-import 'package:iconify_flutter/icons/pepicons.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/styles.dart';
+import 'package:wajbah_chef/core/widgets/order_state.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/TextRich.dart';
+import 'package:wajbah_chef/features/Orders/presentation/view_model/track_orders_cubit.dart';
+import 'package:wajbah_chef/features/detailed_request/presentation/view_model/accept_order_cubit.dart';
 
 class ServingListItem extends StatefulWidget {
   const ServingListItem({
@@ -21,11 +21,13 @@ class ServingListItem extends StatefulWidget {
     required this.Order_name,
     required this.Order_item_count,
     required this.Available_time,
+    required this.state,
   }) : super(key: key);
 
   final double height;
+  final String state;
   final double width;
-  final String OrderId;
+  final int OrderId;
   final String Order_name;
   final int Order_item_count;
   final String Client_name;
@@ -38,46 +40,21 @@ class ServingListItem extends StatefulWidget {
 }
 
 class _ServingListItemState extends State<ServingListItem> {
-  late Duration _duration;
-  late Timer _timer;
-  late String _dropdownvalue = 'Preparing';
+  late String _dropdownvalue;
 
   @override
   void initState() {
     super.initState();
-    _startCountdown();
-    _dropdownvalue = 'Preparing';
+    _dropdownvalue = widget.state;
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
-  }
-
-  void _startCountdown() {
-    var time = widget.Available_time.split(':');
-    int minutes = int.parse(time[0]);
-    int seconds = int.parse(time[1]);
-
-    _duration = Duration(minutes: minutes, seconds: seconds);
-
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_duration.inSeconds > 0) {
-          _duration = _duration - Duration(seconds: 1);
-        } else {
-          _timer.cancel();
-        }
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    String formattedTime =
-        '${_duration.inMinutes.remainder(60)}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}';
-
     return Container(
       height: widget.height * 0.32,
       width: widget.width * 0.8,
@@ -104,52 +81,11 @@ class _ServingListItemState extends State<ServingListItem> {
                       width: widget.width * 0.03,
                     ),
                     const Iconify(
-                      Pepicons.electricity_print,
+                      Ic.baseline_print,
                       color: Colors.yellow,
                     )
                   ],
                 ),
-                Container(
-                  width: widget.width * 0.18,
-                  height: widget.height * 0.04,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(23),
-                    color: _duration.inMinutes > 5
-                        ? wajbah_green_light
-                        : _duration.inMinutes > 1 && _duration.inMinutes < 5
-                            ? Color(0xffFFF59F)
-                            : Color(0xffFFE2E2),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Iconify(
-                        Mdi.clock_time_three,
-                        color: _duration.inMinutes > 5
-                            ? wajbah_green_light
-                            : _duration.inMinutes > 1 && _duration.inMinutes < 5
-                                ? Color(0xffC5B528)
-                                : Color(0xffBE3C26),
-                      ),
-                      SizedBox(
-                        width: widget.width * 0.01,
-                      ),
-                      Text(
-                        formattedTime,
-                        style: Styles.titleMedium.copyWith(
-                          fontSize: 16,
-                          color: _duration.inMinutes > 5
-                              ? wajbah_green_light
-                              : _duration.inMinutes > 1 &&
-                                      _duration.inMinutes < 5
-                                  ? Color(0xffC5B528)
-                                  : Color(0xffBE3C26),
-                        ),
-                        textAlign: TextAlign.center,
-                      )
-                    ],
-                  ),
-                )
               ],
             ),
             SizedBox(
@@ -184,7 +120,7 @@ class _ServingListItemState extends State<ServingListItem> {
             Row(
               children: [
                 const Iconify(
-                  Gg.profile,
+                  Ic.baseline_account_circle,
                   color: wajbah_green,
                 ),
                 SizedBox(
@@ -195,8 +131,8 @@ class _ServingListItemState extends State<ServingListItem> {
                   children: [
                     Text(
                       'Customer',
-                      style: Styles.titleSmall
-                          .copyWith(color: wajbah_gray, fontSize: 10),
+                      style: Styles.titleSmall.copyWith(
+                          color: wajbah_gray, fontSize: 10),
                     ),
                     SizedBox(
                       height: widget.height * 0.005,
@@ -227,8 +163,8 @@ class _ServingListItemState extends State<ServingListItem> {
                   children: [
                     Text(
                       'Location',
-                      style: Styles.titleSmall
-                          .copyWith(color: wajbah_gray, fontSize: 10),
+                      style: Styles.titleSmall.copyWith(
+                          color: wajbah_gray, fontSize: 10),
                     ),
                     SizedBox(
                       height: widget.height * 0.005,
@@ -245,13 +181,20 @@ class _ServingListItemState extends State<ServingListItem> {
             const SizedBox(
               height: 8,
             ),
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
+                if (widget.state == 'Delivering') ...[
+              InkWell(
+                onTap: () {
+                  _acceptOrder('Done');
+                },
+                child: Container(
                   decoration: BoxDecoration(
-                      color: wajbah_primary,
-                      borderRadius: BorderRadius.circular(12)),
+                    color: wajbah_primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Center(
@@ -263,41 +206,103 @@ class _ServingListItemState extends State<ServingListItem> {
                     ),
                   ),
                 ),
+              ),
+              SizedBox(height: 8),
+            ],
                 DropdownButton(
-                    value: _dropdownvalue,
-                    icon: const Iconify(
-                      Ic.baseline_keyboard_arrow_down,
-                      color: wajbah_black,
-                    ),
-                    items: [
-                      DropdownMenuItem<String>(
-                        value: 'Preparing',
-                        child: Text(
-                          'Preparing',
-                          style: Styles.titleMedium.copyWith(fontSize: 14),
-                        ),
-                      ),
-                      DropdownMenuItem<String>(
-                        value: 'Cooking',
-                        child: Text('Cooking',
-                            style: Styles.titleMedium.copyWith(fontSize: 14)),
-                      ),
-                      DropdownMenuItem<String>(
-                        value: 'Delivering',
-                        child: Text('Delivering',
-                            style: Styles.titleMedium.copyWith(fontSize: 14)),
-                      ),
-                    ],
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _dropdownvalue = newValue ?? 'Preparing';
-                      });
-                    }),
+                  value: _dropdownvalue,
+                  icon: const Iconify(
+                    Ic.baseline_keyboard_arrow_down,
+                    color: wajbah_black,
+                  ),
+                  items: _buildDropdownItems(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _dropdownvalue = newValue!;
+                      _acceptOrder(newValue);
+                      OrderState.updateState(newValue);
+                      context.read<TrackOrdersCubit>().trackOrders();
+                    });
+                  },
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
     );
+  }
+
+  List<DropdownMenuItem<String>> _buildDropdownItems() {
+    final items = <DropdownMenuItem<String>>[];
+
+    if (_dropdownvalue == 'Preparing') {
+      items.add(DropdownMenuItem<String>(
+        value: 'Preparing',
+        child: Text(
+          'Preparing',
+          style: Styles.titleMedium.copyWith(fontSize: 14),
+        ),
+      ));
+      items.add(DropdownMenuItem<String>(
+        value: 'Cooking',
+        child: Text(
+          'Cooking',
+          style: Styles.titleMedium.copyWith(fontSize: 14),
+        ),
+      ));
+      items.add(DropdownMenuItem<String>(
+        value: 'Delivering',
+        child: Text(
+          'Delivering',
+          style: Styles.titleMedium.copyWith(fontSize: 14),
+        ),
+      ));
+    } else if (_dropdownvalue == 'Cooking') {
+      items.add(DropdownMenuItem<String>(
+        value: 'Cooking',
+        child: Text(
+          'Cooking',
+          style: Styles.titleMedium.copyWith(fontSize: 14),
+        ),
+      ));
+      items.add(DropdownMenuItem<String>(
+        value: 'Delivering',
+        child: Text(
+          'Delivering',
+          style: Styles.titleMedium.copyWith(fontSize: 14),
+        ),
+      ));
+    } else if (_dropdownvalue == 'Delivering') {
+      items.add(DropdownMenuItem<String>(
+        value: 'Delivering',
+        child: Text(
+          'Delivering',
+          style: Styles.titleMedium.copyWith(fontSize: 14),
+        ),
+      ));
+      items.add(DropdownMenuItem<String>(
+        value: 'Done',
+        child: Text(
+          'Received',
+          style: Styles.titleMedium.copyWith(fontSize: 14),
+        ),
+      ));
+    }
+
+    return items;
+  }
+
+  void _acceptOrder(String newState) {
+    final stateCubit = context.read<StateCubit>();
+    stateCubit.initialize(
+      orderId: widget.OrderId,
+      state: newState,
+    );
+    stateCubit.updateOrderState();
+
+    if (newState == 'Done') {
+      context.read<TrackOrdersCubit>().trackOrders();
+    }
   }
 }

@@ -10,7 +10,12 @@ import 'package:wajbah_chef/features/Home/data/repo/home_repo_impl.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/home_body.dart';
 import 'package:wajbah_chef/features/Home/presentation/view_model/home_cubit.dart';
 import 'package:wajbah_chef/features/OnBoarding/presentations/view/onboarding.dart';
+import 'package:wajbah_chef/features/Orders/data/repo/track_remote_source.dart';
+import 'package:wajbah_chef/features/Orders/data/repo/track_repo_impl.dart';
 import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
+import 'package:wajbah_chef/features/Orders/presentation/view_model/track_orders_cubit.dart';
+import 'package:wajbah_chef/features/detailed_request/presentation/view/widgets/detailed_request_body.dart';
+import 'package:wajbah_chef/features/detailed_request/presentation/view_model/accept_order_cubit.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view_model/timer_bloc.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuItem_remotesource.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuitem_repo_impl.dart';
@@ -19,6 +24,8 @@ import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit
 import 'features/Authentication/presentation/view/login_view/login_view.dart';
 import 'features/Authentication/presentation/view/signup_view/register_view.dart';
 import 'features/Authentication/presentation/view_model/auth_states.dart';
+import 'features/detailed_request/data/repo/state_remote_source.dart';
+import 'features/detailed_request/data/repo/state_repo_impl.dart';
 
 void main() {
   runApp(
@@ -47,22 +54,46 @@ class WajbahChef extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => HomeCubit(
-                homeRepoImpl: HomeRepoImpl(
-                  homeRemoteSource: HomeRemoteSource(
-                    dio: DioFactory.getDio(),
-                  ),
+              homeRepoImpl: HomeRepoImpl(
+                homeRemoteSource: HomeRemoteSource(
+                  dio: DioFactory.getDio(),
                 ),
-                token ?? ""),
+              ),
+              token ?? "",
+            ),
           ),
           BlocProvider(
             create: (context) => MenuGetCubit(
-                menuItemRepoImpl: MenuItemRepoImpl(
-                    menuRemoteSource:
-                        MenuRemoteSource(dio: DioFactory.getDio())),
-                token ?? ""),
+              menuItemRepoImpl: MenuItemRepoImpl(
+                menuRemoteSource: MenuRemoteSource(
+                  dio: DioFactory.getDio(),
+                ),
+              ),
+              token ?? "",
+            ),
           ),
           BlocProvider<TimerBloc>(
             create: (_) => TimerBloc(Duration.zero),
+          ),
+          BlocProvider(
+            create: (context) => StateCubit(
+              stateRepoImpl: StateRepoImpl(
+                stateRemoteSource: StateRemoteSource(
+                  dio: DioFactory.getDio(),
+                ),
+              ),
+              token ?? "",
+            ),
+          ),
+          BlocProvider(
+            create: (context) => TrackOrdersCubit(
+              trackRepoImpl: TrackRepoImpl(
+                trackRemoteSource: TrackRemoteSource(
+                  dio: DioFactory.getDio(),
+                ),
+              ),
+              token ?? "",
+            ),
           ),
         ],
         child: const WajbahApp(),
@@ -82,11 +113,11 @@ class WajbahApp extends StatelessWidget {
       home: const LoginView(),
       routes: {
         "onboarding": (context) => const OnBoardingScreen(),
-        "orders": (context) => const OrdersView(),
         "login": (context) => const LoginView(),
         "home": (context) => const HomeScreenView(),
         "register": (context) => const MultiStepRegistration(),
         "profile": (context) => const LoginView(),
+        "requestView": (context) => const DetailedRequestBody(),
       },
     );
   }

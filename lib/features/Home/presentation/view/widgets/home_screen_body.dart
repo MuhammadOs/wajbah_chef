@@ -48,6 +48,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
     double height = SizeConfig.screenH!;
 
     List<Result> orders = widget.orders.result ?? [];
+    
 
     return SingleChildScrollView(
       child: Column(
@@ -119,7 +120,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (c) {
-                        return const OrdersView();
+                        return  OrdersView(chefId: widget.chef_id,token:  widget.token);
                       },
                     ));
                   },
