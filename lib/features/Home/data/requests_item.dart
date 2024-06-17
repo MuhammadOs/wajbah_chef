@@ -4,7 +4,7 @@ class Request {
   late int num_of_items;
   late String Requester_name;
   late String Requester_location;
-  late int Item_price;
+  late double Item_price;
   late String item_Description;
   late String Available_time;
   late String Request_condition;

@@ -40,9 +40,9 @@ class RequestModel {
 class Result {
   int? orderId;
   String? notes;
-  int? totalPrice;
-  int? subTotal;
-  int? deliveryFees;
+  double? totalPrice;
+  double? subTotal;
+  double? deliveryFees;
   int? deliveryNumber;
   String? createdOn;
   String? deliveryTime;
@@ -57,8 +57,8 @@ class Result {
   int? customerId;
   List<MenuItems>? menuItems;
   String? chefId;
-  String?fname;
-  String?lname;
+  String? fname;
+  String? lname;
   String? address;
   Result({
     this.orderId,
@@ -155,7 +155,7 @@ class MenuItems {
   SizesPrices? sizesPrices;
   bool? healthyMode;
   String? description;
-  double? rate;
+  int? rate;
   String? photo;
   dynamic restaurantPhoto;
   dynamic restaurantName;
@@ -220,9 +220,9 @@ class MenuItems {
 }
 
 class SizesPrices {
-  int? priceSmall;
-  int? priceMedium;
-  int? priceLarge;
+  double? priceSmall;
+  double? priceMedium;
+  double? priceLarge;
 
   SizesPrices({this.priceSmall, this.priceMedium, this.priceLarge});
 

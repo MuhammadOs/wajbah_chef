@@ -8,7 +8,7 @@ class OrderDetails extends StatelessWidget {
   final String order_id;
   final String item_name;
   final int item_count;
-  final int price;
+  final double price;
   final String Description;
   const OrderDetails({
     super.key,

@@ -36,7 +36,7 @@ class RequestsListItem extends StatefulWidget {
   final int Order_item_count;
   final String Client_name;
   final String Client_location;
-  final int Order_Price;
+  final double Order_Price;
   final String Available_time;
   final String PhoneNumber;
   final String Condition;

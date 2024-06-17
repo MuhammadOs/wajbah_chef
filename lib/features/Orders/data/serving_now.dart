@@ -4,7 +4,7 @@ class Serving {
   late int num_of_items;
   late String Requester_name;
   late String Requester_location;
-  late int Item_price;
+  late double Item_price;
   late String Available_time;
   late String Request_condition;
   late String Phone_number;

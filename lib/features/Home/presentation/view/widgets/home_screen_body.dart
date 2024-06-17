@@ -120,7 +120,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (c) {
-                        return  OrdersView(chefId: widget.chef_id,token:  widget.token);
+                        return  OrdersView();
                       },
                     ));
                   },

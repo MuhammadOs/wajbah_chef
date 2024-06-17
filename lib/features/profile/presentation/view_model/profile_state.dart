@@ -7,9 +7,9 @@ class InitialProfileManagementState extends ProfileManagementState {}
 class UpdatingProfile extends ProfileManagementState {}
 
 class ProfileUpdated extends ProfileManagementState {
-  final ProfileUpdateRequest requestModel;
+  //final ProfileUpdateRequest requestModel;
 
-  ProfileUpdated(this.requestModel);
+  ProfileUpdated();
 }
 
 class ProfileUpdateError extends ProfileManagementState {

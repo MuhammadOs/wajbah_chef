@@ -9,10 +9,10 @@ class ProfileRepoImpl {
 
   ProfileRepoImpl({required this.profileRemoteSource});
 
-  Future<Either<Exception, Map<String, dynamic>>> updateProfile(ProfileUpdateRequest profileUpdateRequest, String token) async {
+  Future<Either<Exception, void>> updateProfile(ProfileUpdateRequest profileUpdateRequest, String token) async {
     try {
       final result = await profileRemoteSource.updateProfile(profileUpdateRequest, token);
-      return Right(result);
+      return const Right(null);
     } catch (exception) {
       if (exception is DioError) {
         return Left(exception);

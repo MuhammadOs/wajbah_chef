@@ -1,9 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
+/*
 String webviewLink = "https://flutter.dev";
 final webViewController = WebViewController()
   ..setJavaScriptMode(JavaScriptMode.disabled)
@@ -24,3 +22,5 @@ final webViewController = WebViewController()
     ),
   )
   ..loadRequest(Uri.parse(webviewLink));
+
+*/

@@ -66,7 +66,7 @@ class DashBoardBody extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context,  'financeView');
+                          Navigator.pushNamed(context, 'financeView');
                         } ,
                         child: SmallDashboardContainer(
                             height: height,

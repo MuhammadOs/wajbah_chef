@@ -10,12 +10,10 @@ import 'serving_now_item.dart';
 
 class OrdersBody extends StatefulWidget {
   final String chefId;
-  final String token;
 
   const OrdersBody({
     Key? key,
     required this.chefId,
-    required this.token,
   }) : super(key: key);
 
   @override

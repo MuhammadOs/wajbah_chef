@@ -8,7 +8,7 @@ class ProfileRemoteSource {
 
   ProfileRemoteSource({required this.dio});
 
-  Future<Map<String, dynamic>> updateProfile(ProfileUpdateRequest profileUpdateRequest, String token) async {
+  Future<void> updateProfile(ProfileUpdateRequest profileUpdateRequest, String token) async {
     try {
       final response = await dio.put(
         '${AppConstants.baseUrl}${AppConstants.updateProfile}/${profileUpdateRequest.chefId}', // Append chefId here

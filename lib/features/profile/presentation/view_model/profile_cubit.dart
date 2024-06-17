@@ -25,8 +25,8 @@ class ProfileCubit extends Cubit<ProfileManagementState> {
         response.fold(
           (exception) => ProfileUpdateError(exception.toString()),
           (data) {
-            final updatedProfile = ProfileUpdateRequest.fromJson(data);
-            return ProfileUpdated(updatedProfile);
+            //final updatedProfile = ProfileUpdateRequest.fromJson(data);
+            return ProfileUpdated();
           },
         ),
       );
