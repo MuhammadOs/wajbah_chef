@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
 import 'package:wajbah_chef/features/detailed_request/data/model/state_model.dart';
 import 'package:wajbah_chef/features/detailed_request/data/repo/state_repo_impl.dart';
 

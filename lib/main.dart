@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wajbah_chef/core/networking/dio_factory.dart';
@@ -12,7 +11,6 @@ import 'package:wajbah_chef/features/Home/presentation/view_model/home_cubit.dar
 import 'package:wajbah_chef/features/OnBoarding/presentations/view/onboarding.dart';
 import 'package:wajbah_chef/features/Orders/data/repo/track_remote_source.dart';
 import 'package:wajbah_chef/features/Orders/data/repo/track_repo_impl.dart';
-import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
 import 'package:wajbah_chef/features/Orders/presentation/view_model/track_orders_cubit.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view/widgets/detailed_request_body.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view_model/accept_order_cubit.dart';
@@ -20,7 +18,10 @@ import 'package:wajbah_chef/features/detailed_request/presentation/view_model/ti
 import 'package:wajbah_chef/features/menu/data/repo/menuItem_remotesource.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuitem_repo_impl.dart';
 import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit.dart';
-
+import 'package:wajbah_chef/features/profile/data/repo/profile_remote_source.dart';
+import 'package:wajbah_chef/features/profile/data/repo/profile_repo_impl.dart';
+import 'package:wajbah_chef/features/profile/presentation/view/profile_view.dart';
+import 'package:wajbah_chef/features/profile/presentation/view_model/profile_cubit.dart';
 import 'features/Authentication/presentation/view/login_view/login_view.dart';
 import 'features/Authentication/presentation/view/signup_view/register_view.dart';
 import 'features/Authentication/presentation/view_model/auth_states.dart';
@@ -86,6 +87,16 @@ class WajbahChef extends StatelessWidget {
             ),
           ),
           BlocProvider(
+            create: (context) => ProfileCubit(
+              profileRepoImpl: ProfileRepoImpl(
+                profileRemoteSource: ProfileRemoteSource(
+                  dio: DioFactory.getDio(),
+                ),
+              ),
+              token ?? "",
+            ),
+          ),
+          BlocProvider(
             create: (context) => TrackOrdersCubit(
               trackRepoImpl: TrackRepoImpl(
                 trackRemoteSource: TrackRemoteSource(
@@ -118,6 +129,7 @@ class WajbahApp extends StatelessWidget {
         "register": (context) => const MultiStepRegistration(),
         "profile": (context) => const LoginView(),
         "requestView": (context) => const DetailedRequestBody(),
+        "chef_profile":(context) => const ProfileView(),
       },
     );
   }

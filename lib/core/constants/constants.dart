@@ -45,6 +45,7 @@ class AppConstants {
   static const postMenuItem = "/MenuItemAPI";
   static const updateState = "/OrderAPI/ChangeOrderState";
   static const trackOrders = "/OrderAPI/GetChefOrders";
+  static const updateProfile = "Chef";
 }
 
 

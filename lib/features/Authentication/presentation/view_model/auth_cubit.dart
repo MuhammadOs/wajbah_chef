@@ -21,6 +21,13 @@ class AuthCubit extends Cubit<AuthState> {
   String? chef_Lname;
   int? phone_number;
   String? description;
+  DateTime? birthdate;
+  String? governorate;
+  String? city;
+  String? street;
+  String?floor;
+  String? buildingNumber;
+  String? flatNumber;
 
   AuthCubit({required this.authRepoImpl}) : super(InitialAuthState());
 
@@ -60,6 +67,13 @@ class AuthCubit extends Cubit<AuthState> {
         phone_number = loginResponse.result?.chef?.phoneNumber;
         password = loginResponse.result?.chef?.password;
         description = loginResponse.result?.chef?.description;
+        birthdate = loginResponse.result?.chef?.birthDate;
+        governorate = loginResponse.result?.chef?.address?.governorate;
+        city = loginResponse.result?.chef?.address?.city;
+        street = loginResponse.result?.chef?.address?.street;
+        buildingNumber = loginResponse.result?.chef?.address?.buildingNumber;
+        floor = loginResponse.result?.chef?.address?.floor;
+        flatNumber = loginResponse.result?.chef?.address?.flatNumber;
         emit(LoginSuccessfullyState(
             token: token!,
             chef_id: chefId!,
@@ -71,6 +85,13 @@ class AuthCubit extends Cubit<AuthState> {
             chef_Lname: chef_Lname!,
             password: password!,
             phone_number: phone_number!,
+            birthdata: birthdate!,
+            city: city!,
+            governorate: governorate!,
+            street: street!,
+            flatNumber: flatNumber!,
+            floor: floor!,
+            buildingNumber: buildingNumber!,
             wallet: wallet!));
       },
     );

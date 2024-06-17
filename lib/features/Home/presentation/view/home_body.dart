@@ -122,25 +122,41 @@ class _HomeScreenViewState extends State<HomeScreenView> {
           return CustomDrawer(
             height: height,
             token: state.token,
-            kitchenName: state.resturant_name,
-            chef_mail: state.chef_mail,
-            chef_Fname: state.chef_Fname,
-            chef_Lname: state.chef_Lname,
-            description: state.description,
-            phone_number: state.phone_number,
+            kitchenName: state.resturant_name, //done
+            chef_mail: state.chef_mail, //
+            chef_Fname: state.chef_Fname, //
+            chef_Lname: state.chef_Lname, //
+            description: state.description, //
+            phone_number: state.phone_number, //
             wallet: state.wallet,
-            password: state.password,
+            password: state.password, //
+            chef_id: state.chef_id,
+            birthdate: state.birthdata,
+            buildingNumber: state.buildingNumber,
+            city: state.city,
+            flatNumber: state.flatNumber,
+            floor: state.floor,
+            governorate: state.governorate,
+            street: state.street,
           );
         } else {
           return CustomDrawer(
             height: height,
             token: '',
+            buildingNumber: '',
+            city: '',
+            flatNumber: '',
+            floor: '',
+            governorate: '',
+            street: '',
+            birthdate: DateTime(DateTime.april), 
             kitchenName: '',
             chef_mail: '',
             chef_Fname: '',
             chef_Lname: '',
             description: '',
             phone_number: 0,
+            chef_id: '',
             wallet: 0,
             password: '',
           );
