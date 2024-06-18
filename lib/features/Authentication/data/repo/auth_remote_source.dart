@@ -19,6 +19,10 @@ class AuthRemoteResource {
     final Response response = await dio.post(
       AppConstants.loginUrl,
       data: loginModel.toJson(),
+      options: Options(headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+      }),
     );
     return response;
   }

@@ -32,8 +32,6 @@ class AppConstants {
   static const tokenKey = "token";
   static const timelineKey = "timeline";
 
-  // cart meals
-
   // end points
   static const baseUrl = "https://wajbah-api.azurewebsites.net/api/";
   static const registerUrl = "/UserChefAuth/register";
@@ -46,6 +44,12 @@ class AppConstants {
   static const updateState = "/OrderAPI/ChangeOrderState";
   static const trackOrders = "/OrderAPI/GetChefOrders";
   static const updateProfile = "Chef";
+
+  // Cache control headers
+  static const noCacheHeaders = {
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+  };
 }
 
 

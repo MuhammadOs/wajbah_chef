@@ -16,6 +16,21 @@ class DioFactory {
         ..options.baseUrl = AppConstants.baseUrl
         ..options.connectTimeout = timeOut
         ..options.receiveTimeout = timeOut;
+
+      // Disable caching for specific endpoints
+      dio!.interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (RequestOptions options, handler) {
+            // Add cache-control headers to disable caching for login endpoint
+            if (options.path == '/UserChefAuth/login') {
+              options.headers['Cache-Control'] = 'no-cache';
+              options.headers['Pragma'] = 'no-cache';
+            }
+            return handler.next(options);
+          },
+        ),
+      );
+
       if (kDebugMode) {
         dio?.interceptors.add(
           LogInterceptor(
@@ -28,9 +43,8 @@ class DioFactory {
           ),
         );
       }
-      return dio!;
-    } else {
-      return dio!;
     }
+
+    return dio!;
   }
 }
