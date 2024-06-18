@@ -1,3 +1,5 @@
+import 'package:wajbah_chef/features/menu/data/model/menu_item.dart';
+
 class LoginResponseModel {
   LoginResponseModel({
     this.statusCode,
@@ -98,10 +100,16 @@ class ChefRespnse {
     wallet = json['wallet'];
     state = json['state'];
     profilePicture = json['profilePicture'];
-    address = json['address'] != null ? Address.fromJson(json['address']) : null;
+    address =
+        json['address'] != null ? Address.fromJson(json['address']) : null;
     active = json['active'];
     extraMenuItems = json['extraMenuItems'];
-    menuItems = json['menuItems'];
+    if (json['menuItems'] != null) {
+      menuItems = [];
+      json['menuItems'].forEach((v) {
+        menuItems?.add(MenuItem.fromJson(v));
+      });
+    }
     promoCodes = json['promoCodes'];
     chefPromoCodes = json['chefPromoCodes'];
     orders = json['orders'];
@@ -117,14 +125,14 @@ class ChefRespnse {
   String? restaurantName;
   DateTime? birthDate;
   String? description;
-  double? rating;
+  int? rating;
   double? wallet;
   bool? state;
   String? profilePicture;
   Address? address;
   bool? active;
   dynamic extraMenuItems;
-  dynamic menuItems;
+  List<MenuItem>? menuItems;
   dynamic promoCodes;
   dynamic chefPromoCodes;
   dynamic orders;
@@ -150,7 +158,9 @@ class ChefRespnse {
     }
     map['active'] = active;
     map['extraMenuItems'] = extraMenuItems;
-    map['menuItems'] = menuItems;
+    if (menuItems != null) {
+      map['menuItems'] = menuItems?.map((v) => v.toJson()).toList();
+    }
     map['promoCodes'] = promoCodes;
     map['chefPromoCodes'] = chefPromoCodes;
     map['orders'] = orders;

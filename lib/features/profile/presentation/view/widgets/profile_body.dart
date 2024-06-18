@@ -17,7 +17,7 @@ import '../../view_model/profile_cubit.dart';
 import '../../view_model/profile_state.dart';
 
 class ProfileBody extends StatelessWidget {
-  final ProfileData profileData;
+    final ProfileData profileData;
 
   const ProfileBody({super.key, required this.profileData});
 
@@ -26,6 +26,7 @@ class ProfileBody extends StatelessWidget {
     SizeConfig().init(context);
     double width = SizeConfig.screenW!;
     double height = SizeConfig.screenH!;
+    var args = ModalRoute.of(context)!.settings.arguments as ProfileData;
 
     return SafeArea(
       child: Column(

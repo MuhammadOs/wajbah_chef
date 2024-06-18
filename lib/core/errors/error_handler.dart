@@ -7,6 +7,9 @@ class ErrorHandler implements Exception {
   static late ErrorModel errorModel;
 
   ErrorHandler.handle(dynamic error) {
+    // Log the error being handled
+    print("ErrorHandler.handle: error type: ${error.runtimeType}");
+
     if (error is DioException) {
       errorModel = _handleError(error);
     } else if (error is CashError) {
@@ -16,10 +19,17 @@ class ErrorHandler implements Exception {
     } else {
       errorModel = DataSource.defaultError.getFailure();
     }
+
+    // Log the resulting error model
+    print("ErrorHandler.handle: errorModel: ${errorModel.message}, code: ${errorModel.code}");
   }
 
   ErrorModel _handleError(DioException error) {
+    // Log the DioException details
+    print("ErrorHandler._handleError: DioException type: ${error.type}, message: ${error.message}");
+
     switch (error.type) {
+    // Handle different DioException types with logging
       case DioExceptionType.connectionTimeout:
         return DataSource.connectTimeout.getFailure();
       case DioExceptionType.sendTimeout:
@@ -54,3 +64,4 @@ class ErrorHandler implements Exception {
     }
   }
 }
+

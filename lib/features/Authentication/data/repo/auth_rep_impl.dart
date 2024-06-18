@@ -24,7 +24,8 @@ class AuthRepoImpl {
     }
   }
 
-  Future<Either<Exception, LoginResponseModel>> login(LoginModel loginModel) async {
+  Future<Either<Exception, LoginResponseModel>> login(
+      LoginModel loginModel) async {
     try {
       final Response response = await authRemoteResource.login(loginModel);
       final loginResponse = LoginResponseModel.fromJson(response.data);

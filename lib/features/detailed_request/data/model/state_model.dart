@@ -35,9 +35,9 @@ class StateModel {
 class SatateResult {
   int? orderId;
   String? notes;
-  int? totalPrice;
-  int? subTotal;
-  int? deliveryFees;
+  dynamic totalPrice;
+  dynamic subTotal;
+  dynamic deliveryFees;
   int? deliveryNumber;
   String? createdOn;
   String? deliveryTime;
