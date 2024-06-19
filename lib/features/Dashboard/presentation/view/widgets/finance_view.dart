@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_windows/webview_windows.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
 
 class FinanceView extends StatefulWidget {
@@ -10,16 +10,31 @@ class FinanceView extends StatefulWidget {
 }
 
 class _FinanceViewState extends State<FinanceView> {
-  late WebViewController _webViewController;
-  final _webviewLink = "https://flutter.dev"; // Initial URL to load
+  final _controller = WebviewController();
+  final _webviewLink = "https://lookerstudio.google.com/embed/u/0/reporting/2b2c64d3-8fef-4c74-84c2-26c8c993be2f/page/p_3hqiumqdid"; // Your initial URL
+  bool _isWebviewReady = false;
 
   @override
   void initState() {
     super.initState();
-    // Enable WebView for Android
-    WebView.platform = SurfaceAndroidWebView();
-    // For iOS use:
-    // WebView.platform = CupertinoWebView();
+    _initializeWebView();
+  }
+
+  Future<void> _initializeWebView() async {
+    await _controller.initialize();
+    if (!mounted) return;
+    setState(() {
+      _isWebviewReady = true;
+    });
+
+    _controller.url.listen((url) {
+      // Handle URL changes if needed
+    });
+
+    await _controller.loadUrl(_webviewLink);
+    // Inject JavaScript to adjust the zoom level
+    await _controller.executeScript(
+        "document.body.style.zoom = '10';"); // Adjust the zoom level as needed
   }
 
   @override
@@ -30,27 +45,9 @@ class _FinanceViewState extends State<FinanceView> {
           children: [
             CustomAppBar(title: 'Finance View'),
             Expanded(
-              child: WebView(
-                initialUrl: _webviewLink,
-                javascriptMode: JavascriptMode.unrestricted,
-                // Enable JavaScript
-                onWebViewCreated: (WebViewController webViewController) {
-                  _webViewController = webViewController;
-                },
-                onPageStarted: (String url) {
-                  // Handle page load started
-                },
-                onPageFinished: (String url) {
-                  // Handle page load finished
-                },
-                onWebResourceError: (WebResourceError error) {
-                  // Handle web resource errors
-                },
-                navigationDelegate: (NavigationRequest request) {
-                  // Handle navigation requests
-                  return NavigationDecision.navigate;
-                },
-              ),
+              child: _isWebviewReady
+                  ? Webview(_controller)
+                  : const Center(child: CircularProgressIndicator()),
             ),
           ],
         ),

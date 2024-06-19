@@ -26,6 +26,7 @@ dependencies:
   dartz:
   flutter_bloc: ^8.1.5 
   webview_flutter: ^3.0.0
+  webview_windows: 
 
 
 
