@@ -134,23 +134,23 @@ class _MenuViewBodyState extends State<MenuViewBody>
     switch (_tabController.index) {
       case 0:
         filteredItems =
-            items.where((item) => item.category == 'Grilled').toList();
+            items.where((item) => item.category == 'Grilled' || item.category == "grilled").toList();
         break;
       case 1:
         filteredItems =
-            items.where((item) => item.category == 'Oriental').toList();
+            items.where((item) => item.category == 'Oriental' || item.category == "oriental").toList();
         break;
       case 2:
         filteredItems =
-            items.where((item) => item.category == 'Greeny').toList();
+            items.where((item) => item.category == 'Greeny' || item.category == "greeny").toList();
         break;
       case 3:
         filteredItems =
-            items.where((item) => item.category == 'Desserts').toList();
+            items.where((item) => item.category == 'Desserts' || item.category == "desserts").toList();
         break;
       case 4:
         filteredItems =
-            items.where((item) => item.category == 'Offers').toList();
+            items.where((item) => item.category == 'Offers' || item.category == "offers").toList();
         break;
       default:
         filteredItems = items;
