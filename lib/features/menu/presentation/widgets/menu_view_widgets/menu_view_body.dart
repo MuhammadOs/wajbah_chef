@@ -84,6 +84,7 @@ class _MenuViewBodyState extends State<MenuViewBody>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: 40,),
           CustomAppBar(title: "Menu"),
           TabBar(
             controller: _tabController,

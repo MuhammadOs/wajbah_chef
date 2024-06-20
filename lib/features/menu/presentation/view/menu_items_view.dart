@@ -14,11 +14,9 @@ class MenuView extends StatefulWidget {
 class _MenuViewState extends State<MenuView> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: MenuViewBody(chefId: widget.chefId, token: widget.token),
-      ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: MenuViewBody(chefId: widget.chefId, token: widget.token),
     );
   }
 }
