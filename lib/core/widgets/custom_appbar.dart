@@ -1,14 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wajbah_chef/core/constants/constants.dart';
 import '../sizeConfig.dart';
 import '../styles.dart';
 import 'custom_back_button.dart';
 
 class CustomAppBar extends StatelessWidget {
-  CustomAppBar({super.key, required this.title, this.showBackButton = true});
+  CustomAppBar(
+      {super.key,
+      required this.title,
+      this.showBackButton = true,
+      this.isDark = false});
 
   final String title;
   final bool showBackButton;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,9 @@ class CustomAppBar extends StatelessWidget {
               padding: EdgeInsets.only(right: screenWidth * 0.07),
               child: Text(
                 title,
-                style: Styles.titleLarge.copyWith(fontSize: 20),
+                style: Styles.titleLarge.copyWith(
+                    fontSize: 20,
+                    color: wajbah_primary),
                 textAlign: TextAlign.center,
               ),
             ),

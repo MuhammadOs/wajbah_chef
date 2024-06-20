@@ -19,14 +19,14 @@ dependencies:
   iconify_flutter: ^0.0.5
   flutter_native_splash: ^2.3.8
   image_picker: ^1.0.7
-  device_preview: ^1.1.0
+  device_preview: ^1.2.0
   smooth_page_indicator: ^1.1.0
   fl_chart: ^0.67.0
   dio: ^5.4.3+1
   dartz:
   flutter_bloc: ^8.1.5 
-  webview_flutter: ^3.0.0
-  webview_windows: 
+  webview_flutter: ^2.0.14
+  webview_windows:
 
 
 

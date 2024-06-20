@@ -61,6 +61,7 @@ class _LoginViewState extends State<LoginView> {
                   CustomTextField(
                     usernameController: usernameController,
                     hintText: "Phone number",
+                    isNumbers: true,
                     onSaved: (value) {
                       userData["phoneNumber"] = int.parse(value!);
                     },
@@ -118,7 +119,7 @@ class _LoginViewState extends State<LoginView> {
                     },
                     builder: (context, state) {
                       return (state is LoginAuthState)
-                          ? const Center(child: CircularProgressIndicator())
+                          ? const Center(child: CircularProgressIndicator.adaptive())
                           : Center(
                               child: SizedBox(
                                 width: width * 0.8,
@@ -134,12 +135,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 15),
                   const LoginRegisterNavigatorRow(),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "home");
-                    },
-                    child: const Text("Skip"),
-                  ),
                 ],
               ),
             ),

@@ -9,11 +9,13 @@ class CustomTextField extends StatelessWidget {
       {super.key,
       required this.usernameController,
       this.hintText,
-      this.onSaved});
+      this.onSaved,
+      this.isNumbers = false});
 
   final TextEditingController usernameController;
   final String? hintText;
   final void Function(String? value)? onSaved;
+  final bool isNumbers;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,7 @@ class CustomTextField extends StatelessWidget {
               ),
             ),
           ),
-          keyboardType: TextInputType.name,
+          keyboardType: isNumbers ? TextInputType.number : TextInputType.name,
           onFieldSubmitted: (String value) {
             debugPrint(value);
           },

@@ -3,17 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/prime.dart';
-
-import '../../../../core/constants/constants.dart';
-import '../../../../core/sizeConfig.dart';
-import '../../../../core/styles.dart';
-import '../../../Authentication/presentation/view_model/auth_cubit.dart';
-import '../../../Authentication/presentation/view_model/auth_states.dart';
-import '../../data/model/request_model.dart';
-import '../view_model/home_cubit.dart';
-import '../view_model/home_state.dart';
-import 'widgets/custom_drawer.dart';
-import 'widgets/home_screen_body.dart';
+import 'package:wajbah_chef/core/constants/constants.dart';
+import 'package:wajbah_chef/core/sizeConfig.dart';
+import 'package:wajbah_chef/core/styles.dart';
+import 'package:wajbah_chef/features/Authentication/presentation/view_model/auth_cubit.dart';
+import 'package:wajbah_chef/features/Authentication/presentation/view_model/auth_states.dart';
+import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
+import 'package:wajbah_chef/features/Home/presentation/view_model/home_state.dart';
+import 'package:wajbah_chef/features/home/presentation/view/widgets/custom_drawer.dart';
+import 'package:wajbah_chef/features/home/presentation/view/widgets/home_screen_body.dart';
+import 'package:wajbah_chef/features/home/presentation/view_model/home_cubit.dart';
 
 class HomeScreenView extends StatefulWidget {
   const HomeScreenView({Key? key}) : super(key: key);
@@ -35,13 +34,16 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     token = authCubit.getToken ?? "";
     online = authCubit.getActive ?? false;
 
-    // Initialize HomeCubit and fetch orders
+    /*// Initialize HomeCubit and fetch orders
     final homeCubit = context.read<HomeCubit>();
     homeCubit.initialize(chefId: chefId, active: online);
       if (online) {
         homeCubit.fetchOrders();
       }
-    
+      */
+
+    context.read<HomeCubit>().initialize(chefId: chefId, active: online);
+    getHomeCubit(context).fetchOrders();
   }
 
   @override

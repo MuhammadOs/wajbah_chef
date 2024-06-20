@@ -155,7 +155,7 @@ class MenuItems {
   SizesPrices? sizesPrices;
   bool? healthyMode;
   String? description;
-  double? rate;
+  dynamic rate;
   String? photo;
   dynamic restaurantPhoto;
   dynamic restaurantName;

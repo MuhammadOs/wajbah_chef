@@ -73,7 +73,6 @@ class PasswordTextField extends StatelessWidget {
                           color: wajbah_primary,
                         )),
             ),
-            keyboardType: TextInputType.number,
             obscureText: hidePassword,
             onFieldSubmitted: (String value) {
               debugPrint(value);

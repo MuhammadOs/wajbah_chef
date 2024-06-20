@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wajbah_chef/core/networking/dio_factory.dart';
@@ -7,7 +8,6 @@ import 'package:wajbah_chef/features/Authentication/presentation/view_model/auth
 import 'package:wajbah_chef/features/Home/data/repo/home_remote_source.dart';
 import 'package:wajbah_chef/features/Home/data/repo/home_repo_impl.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/home_body.dart';
-import 'package:wajbah_chef/features/Home/presentation/view_model/home_cubit.dart';
 import 'package:wajbah_chef/features/OnBoarding/presentations/view/onboarding.dart';
 import 'package:wajbah_chef/features/Orders/data/repo/track_remote_source.dart';
 import 'package:wajbah_chef/features/Orders/data/repo/track_repo_impl.dart';
@@ -17,6 +17,7 @@ import 'package:wajbah_chef/features/Orders/presentation/view_model/track_orders
 import 'package:wajbah_chef/features/detailed_request/presentation/view/widgets/detailed_request_body.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view_model/accept_order_cubit.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view_model/timer_bloc.dart';
+import 'package:wajbah_chef/features/home/presentation/view_model/home_cubit.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuItem_remotesource.dart';
 import 'package:wajbah_chef/features/menu/data/repo/menuitem_repo_impl.dart';
 import 'package:wajbah_chef/features/menu/presentation/view_model/menuItem_cubit.dart';
@@ -32,15 +33,17 @@ import 'features/detailed_request/data/repo/state_repo_impl.dart';
 
 void main() {
   runApp(
-    BlocProvider(
-      create: (context) => AuthCubit(
-        authRepoImpl: AuthRepoImpl(
-          authRemoteResource: AuthRemoteResource(
-            dio: DioFactory.getDio(),
+    DevicePreview(
+      builder: (context) => BlocProvider(
+        create: (context) => AuthCubit(
+          authRepoImpl: AuthRepoImpl(
+            authRemoteResource: AuthRemoteResource(
+              dio: DioFactory.getDio(),
+            ),
           ),
         ),
+        child: const WajbahChef(),
       ),
-      child: const WajbahChef(),
     ),
   );
 }
@@ -123,7 +126,7 @@ class WajbahApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(fontFamily: "Biryani", canvasColor: Colors.white),
       debugShowCheckedModeBanner: false,
-      home: const LoginView(),
+      home: const OnBoardingScreen(),
       routes: {
         "onboarding": (context) => const OnBoardingScreen(),
         "orders": (context) => const OrdersView(),
