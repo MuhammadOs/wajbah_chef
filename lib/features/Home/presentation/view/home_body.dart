@@ -34,14 +34,6 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     token = authCubit.getToken ?? "";
     online = authCubit.getActive ?? false;
 
-    /*// Initialize HomeCubit and fetch orders
-    final homeCubit = context.read<HomeCubit>();
-    homeCubit.initialize(chefId: chefId, active: online);
-      if (online) {
-        homeCubit.fetchOrders();
-      }
-      */
-
     context.read<HomeCubit>().initialize(chefId: chefId, active: online);
     getHomeCubit(context).fetchOrders();
   }

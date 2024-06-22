@@ -219,7 +219,7 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       backgroundColor: wajbah_primary,
-                      shadowColor: Colors.black,
+                      shadowColor: wajbah_black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -454,6 +454,10 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                           ),
                         ),
                       ),
+                      stepStyle: const StepStyle(
+                          color: wajbah_primary,
+                          connectorColor: wajbah_gray,
+                          errorColor: Colors.red),
                       isActive: currentStep >= 0,
                       state: currentStep >= 1
                           ? StepState.complete
@@ -528,6 +532,10 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                           ),
                         ),
                       ),
+                      stepStyle: StepStyle(
+                          color: currentStep >= 1 ? wajbah_primary: wajbah_gray,
+                          connectorColor: wajbah_gray,
+                          errorColor: Colors.red),
                       isActive: currentStep >= 0,
                       state: currentStep >= 2
                           ? StepState.complete
@@ -683,10 +691,14 @@ class _MultiStepRegistrationState extends State<MultiStepRegistration> {
                           ),
                         ),
                       ),
+                      stepStyle: StepStyle(
+                          color: currentStep == 2 ? wajbah_primary: wajbah_gray,
+                          connectorColor: wajbah_gray,
+                          errorColor: Colors.red),
                       isActive: currentStep >= 0,
                       state: currentStep >= 3
                           ? StepState.complete
-                          : StepState.editing,
+                          : StepState.disabled,
                     ),
                   ],
                 ),

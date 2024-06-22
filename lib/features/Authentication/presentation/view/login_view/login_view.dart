@@ -112,7 +112,7 @@ class _LoginViewState extends State<LoginView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomeScreenView(),
+                            builder: (context) => const HomeScreenView(),
                           ),
                         );
                       }

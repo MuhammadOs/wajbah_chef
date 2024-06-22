@@ -24,6 +24,27 @@ class _MenuViewBodyState extends State<MenuViewBody>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<MenuItem> menuItems = [];
+  Map<String, int> categoryCounts = {};
+
+  @override
+  void didUpdateWidget(covariant MenuViewBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _calculateCategoryCounts();
+  }
+
+  void _calculateCategoryCounts() {
+    categoryCounts.clear();
+    categoryCounts['Grilled'] =
+        menuItems.where((item) => item.category == 'Grilled').length;
+    categoryCounts['Oriental'] =
+        menuItems.where((item) => item.category == 'Oriental').length;
+    categoryCounts['Greeny'] =
+        menuItems.where((item) => item.category == 'Greeny').length;
+    categoryCounts['Desserts'] =
+        menuItems.where((item) => item.category == 'Desserts').length;
+    categoryCounts['Offers'] =
+        menuItems.where((item) => item.category == 'Offers').length;
+  }
 
   @override
   void initState() {
@@ -33,9 +54,10 @@ class _MenuViewBodyState extends State<MenuViewBody>
     print('chef id : ${widget.chefId}');
     print('token : ${widget.token}');
     menuCubit.fetchMenuItemsByID(chefId: widget.chefId);
+    _calculateCategoryCounts();
   }
 
-  void addRoom(MenuItem menuItem) {
+  void addMeal(MenuItem menuItem) {
     setState(() {
       menuItems.add(menuItem);
     });
@@ -63,7 +85,7 @@ class _MenuViewBodyState extends State<MenuViewBody>
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (c) {
-              return CreateRoomView(onMenuItemCreated: addRoom);
+              return CreateRoomView(onMenuItemCreated: addMeal);
             },
           ));
         },
@@ -84,7 +106,9 @@ class _MenuViewBodyState extends State<MenuViewBody>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 40,),
+          const SizedBox(
+            height: 40,
+          ),
           CustomAppBar(title: "Menu"),
           TabBar(
             controller: _tabController,
@@ -118,13 +142,28 @@ class _MenuViewBodyState extends State<MenuViewBody>
               : wajbah_gray_light,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Text(
-          text,
-          style: Styles.hint.copyWith(
-            color: _tabController.index == index ? Colors.white : wajbah_gray,
-            fontSize: MediaQuery.of(context).size.width * 0.03,
-            fontWeight: FontWeight.w500,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: Styles.hint.copyWith(
+                color:
+                    _tabController.index == index ? Colors.white : wajbah_gray,
+                fontSize: MediaQuery.of(context).size.width * 0.03,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '(${categoryCounts[text] ?? 0})', // Display count here
+              style: TextStyle(
+                fontSize: 12,
+                color:
+                    _tabController.index == index ? Colors.white : wajbah_gray,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -134,24 +173,29 @@ class _MenuViewBodyState extends State<MenuViewBody>
     List<MenuItem> filteredItems;
     switch (_tabController.index) {
       case 0:
-        filteredItems =
-            items.where((item) => item.category == 'Grilled' || item.category == "grilled").toList();
+        filteredItems = items
+            .where((item) => item.category?.toLowerCase() == 'grilled')
+            .toList();
         break;
       case 1:
-        filteredItems =
-            items.where((item) => item.category == 'Oriental' || item.category == "oriental").toList();
+        filteredItems = items
+            .where((item) => item.category?.toLowerCase() == 'oriental')
+            .toList();
         break;
       case 2:
-        filteredItems =
-            items.where((item) => item.category == 'Greeny' || item.category == "greeny").toList();
+        filteredItems = items
+            .where((item) => item.category?.toLowerCase() == 'greeny')
+            .toList();
         break;
       case 3:
-        filteredItems =
-            items.where((item) => item.category == 'Desserts' || item.category == "desserts").toList();
+        filteredItems = items
+            .where((item) => item.category?.toLowerCase() == 'desserts')
+            .toList();
         break;
       case 4:
-        filteredItems =
-            items.where((item) => item.category == 'Offers' || item.category == "offers").toList();
+        filteredItems = items
+            .where((item) => item.category?.toLowerCase() == 'offers')
+            .toList();
         break;
       default:
         filteredItems = items;
@@ -170,7 +214,6 @@ class _MenuViewBodyState extends State<MenuViewBody>
           )
         : MenuCardListView(
             filteredItems,
-            isMyRoom: true,
           );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
-
+import 'package:wajbah_chef/features/home/data/model/order_model.dart';
 import '../../../../../core/widgets/custom_appbar.dart';
 import '../../../../Orders/presentation/view/widgets/serving_now_item.dart';
 import '../../../../Orders/presentation/view_model/track_orders_cubit.dart';
@@ -22,7 +21,7 @@ class DoneOrdersBody extends StatefulWidget {
 }
 
 class _DoneOrdersBodyState extends State<DoneOrdersBody> {
-  List<Result> doneOrders = [];
+  List<Order> doneOrders = [];
 
   @override
   void initState() {
@@ -41,7 +40,7 @@ class _DoneOrdersBodyState extends State<DoneOrdersBody> {
             child: BlocBuilder<TrackOrdersCubit, TrackState>(
               builder: (context, state) {
                 if (state is TrackStateLoading) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator.adaptive());
                 } else if (state is TrackStateLoaded) {
                   final orders = state.orders.result ?? [];
                   doneOrders = orders.where((order) => order.status == 'Done').toList();

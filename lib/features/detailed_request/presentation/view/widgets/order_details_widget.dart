@@ -2,25 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
+import 'package:wajbah_chef/core/sizeConfig.dart';
 import 'package:wajbah_chef/core/styles.dart';
+import 'package:wajbah_chef/features/menu/data/model/menu_item.dart';
 
 class OrderDetails extends StatelessWidget {
   final String order_id;
-  final String item_name;
-  final int item_count;
+  final List<dynamic> quantities;
   final double price;
-  final String Description;
+  final List<MenuItem>? menuItems;
+
   const OrderDetails({
     super.key,
     required this.order_id,
-    required this.item_name,
-    required this.item_count,
+    required this.quantities,
     required this.price,
-    required this.Description,
+    this.menuItems,
   });
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    final screenWidth = SizeConfig.screenW!;
+    final screenHeight = SizeConfig.screenH!;
     return Column(
       children: [
         Row(
@@ -59,64 +63,72 @@ class OrderDetails extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  width: 70,
-                  height: 70,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(
-                      'assets/images/Wajbah_Finale.png',
-                      fit: BoxFit.cover,
+        for (int i = 0; i < quantities.length; i++)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  SizedBox(
+                    height: screenHeight * 0.075,
+                    width: screenWidth * 0.25,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(screenWidth * 0.05),
+                      child: Image.network(
+                        menuItems?[i].photo ??
+                            "https://cdn-icons-png.flaticon.com/512/5663/5663566.png",
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                            "https://mir-s3-cdn-cf.behance.net/project_modules/1400/e6780a61944633.5a7f56a3a21ba.jpg",
+                            fit: BoxFit.cover,
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      (loadingProgress.expectedTotalBytes ?? 1)
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'x$item_count $item_name',
-                  style: Styles.titleMedium
-                      .copyWith(fontSize: 14, color: wajbah_black),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  'Regular',
-                  style: Styles.hint,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: 200,
-                  child: Text(
-                    Description,
-                    style: Styles.hint,
-                    softWrap: true,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Text('EGP $price',
+                ],
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'x${quantities[i]} ${menuItems?[i].name}',
                     style: Styles.titleMedium
-                        .copyWith(fontSize: 14, color: wajbah_black))
-              ],
-            ),
-          ],
-        ),
+                        .copyWith(fontSize: 14, color: wajbah_black),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    width: 200,
+                    child: Text(
+                      menuItems?[i].description ?? "Description",
+                      style: Styles.hint,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
+              Text('EGP $price',
+                  style: Styles.titleMedium
+                      .copyWith(fontSize: 14, color: wajbah_black))
+            ],
+          ),
       ],
     );
   }

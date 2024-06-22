@@ -14,6 +14,7 @@ import 'package:wajbah_chef/features/Orders/data/repo/track_repo_impl.dart';
 import 'package:wajbah_chef/features/Orders/presentation/view/orders_view.dart';
 import 'package:wajbah_chef/features/dashboard/presentation/view/widgets/finance_view.dart';
 import 'package:wajbah_chef/features/Orders/presentation/view_model/track_orders_cubit.dart';
+import 'package:wajbah_chef/features/detailed_request/presentation/view/detailed_request_view.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view/widgets/detailed_request_body.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view_model/accept_order_cubit.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view_model/timer_bloc.dart';
@@ -135,7 +136,7 @@ class WajbahApp extends StatelessWidget {
         "register": (context) => const MultiStepRegistration(),
         "profile": (context) => const LoginView(),
         "financeView": (context) => const FinanceView(),
-        "requestView": (context) => const DetailedRequestBody(),
+        "requestView": (context) => const DetailedRequestView(duration: Duration(seconds: 0)),
         "chef_profile":(context) => const ProfileView(),
       },
     );

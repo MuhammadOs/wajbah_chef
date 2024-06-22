@@ -29,32 +29,24 @@ class _PageViewBodyState extends State<PageViewBody> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.only(right: width * 0.06, bottom: height * 0.02),
-          child: Image.asset(
-            content[widget.index].image,
-            width: width,
-            height: height / 3,
-          ),
+        Image.asset(
+          content[widget.index].image,
+          width: width,
+          height: height / 3,
         ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              OnboardingTitles(
-                index: widget.index,
-              ),
-              SizedBox(
-                height: height * 0.005,
-              ),
-              OnboardingDiscription(
-                index: widget.index,
-              ),
-              SizedBox(
-                height: height * 0.03,
-              ),
-            ],
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            OnboardingTitles(
+              index: widget.index,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            OnboardingDiscription(
+              index: widget.index,
+            ),
+          ],
         )
       ],
     );

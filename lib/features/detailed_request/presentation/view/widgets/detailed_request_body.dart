@@ -82,139 +82,136 @@ class _DetailedRequestBodyState extends State<DetailedRequestBody> {
   }
 
   void _acceptOrder() {
-  final stateCubit = context.read<StateCubit>();
-  if (arg != null) {
-    stateCubit.initialize(orderId: int.parse(arg!.Request_ID), state: OrderState.currentState);
-    stateCubit.updateOrderState();
+    final stateCubit = context.read<StateCubit>();
+    if (arg != null) {
+      stateCubit.initialize(
+          orderId: int.parse(arg!.Request_ID), state: OrderState.currentState);
+      stateCubit.updateOrderState();
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimerBloc, Duration>(
       builder: (context, duration) {
-        return SafeArea(
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CustomAppBar(title: 'New Requests'),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: OrderDetails(
-                          order_id: arg!.Request_ID,
-                          item_name: arg!.Item_name,
-                          item_count: arg!.num_of_items,
-                          price: arg!.Item_price,
-                          Description: arg!.item_Description),
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: OrderDetails(
+                      order_id: arg!.Request_ID,
+                      quantities: arg!.num_of_items,
+                      price: arg!.Item_price,
+                      menuItems: arg!.menuItems,
                     ),
-                    const CustomDivider(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Column(
-                        children: [
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Customer Info',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          CustomInfoListtile(
-                            title: 'Customer',
-                            subtitle: arg!.Requester_name,
-                            Icon: Ic.baseline_account_circle,
-                          ),
-                          CustomInfoListtile(
-                            title: 'Location',
-                            subtitle: arg!.Requester_location,
-                            Icon: MaterialSymbols.location_on,
-                          ),
-                          CustomInfoListtile(
-                            title: 'Phone Number',
-                            subtitle: arg!.Phone_number,
-                            Icon: MaterialSymbols.phone_in_talk_sharp,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const CustomDivider(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: Column(
-                        children: [
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Payment Info',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          CustomInfoListtile(
-                            title: 'Method',
-                            subtitle: 'Cash on Delivery',
-                            Icon: Majesticons.money_hand_line,
-                          ),
-                          CustomInfoListtile(
-                            title: 'Tips',
-                            subtitle: '5 EGP',
-                            Icon: MaterialSymbols.payments,
-                          ),
-                          CustomInfoListtile(
-                            title: 'Promo Code',
-                            subtitle: 'No Codes Applied',
-                            Icon: MaterialSymbols.barcode,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const CustomDivider(),
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: 50,
-                right: 100,
-                left: 100,
-                child: FloatingActionButton(
-                  backgroundColor: wajbah_primary.withOpacity(0.9),
-                  onPressed: _acceptOrder,
-                  child: Padding(
+                  ),
+                  const CustomDivider(),
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 50),
-                          child: Text(
-                            'Accept',
-                            style: Styles.titleMedium
-                                .copyWith(fontSize: 16, color: wajbah_white),
-                          ),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Customer Info',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '${_duration.inMinutes.remainder(60)}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}',
-                          style: Styles.titleMedium
-                              .copyWith(fontSize: 16, color: wajbah_white),
+                        CustomInfoListtile(
+                          title: 'Customer',
+                          subtitle: arg!.Requester_name,
+                          Icon: Ic.baseline_account_circle,
+                        ),
+                        CustomInfoListtile(
+                          title: 'Location',
+                          subtitle: arg!.Requester_location,
+                          Icon: MaterialSymbols.location_on,
+                        ),
+                        CustomInfoListtile(
+                          title: 'Phone Number',
+                          subtitle: arg!.Phone_number,
+                          Icon: MaterialSymbols.phone_in_talk_sharp,
                         ),
                       ],
                     ),
                   ),
+                  const CustomDivider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Payment Info',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        CustomInfoListtile(
+                          title: 'Method',
+                          subtitle: 'Cash on Delivery',
+                          Icon: Majesticons.money_hand_line,
+                        ),
+                        CustomInfoListtile(
+                          title: 'Tips',
+                          subtitle: '5 EGP',
+                          Icon: MaterialSymbols.payments,
+                        ),
+                        CustomInfoListtile(
+                          title: 'Promo Code',
+                          subtitle: 'No Codes Applied',
+                          Icon: MaterialSymbols.barcode,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 100,
+              left: 100,
+              child: FloatingActionButton(
+                backgroundColor: wajbah_primary.withOpacity(0.9),
+                onPressed: _acceptOrder,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50),
+                        child: Text(
+                          'Accept',
+                          style: Styles.titleMedium
+                              .copyWith(fontSize: 16, color: wajbah_white),
+                        ),
+                      ),
+                      Text(
+                        '${_duration.inMinutes.remainder(60)}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                        style: Styles.titleMedium
+                            .copyWith(fontSize: 16, color: wajbah_white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

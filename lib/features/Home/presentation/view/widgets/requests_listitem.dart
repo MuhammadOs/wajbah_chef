@@ -8,39 +8,39 @@ import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/pepicons.dart';
 import 'package:wajbah_chef/core/constants/constants.dart';
 import 'package:wajbah_chef/core/styles.dart';
+import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
 import 'package:wajbah_chef/features/Home/data/requests_item.dart';
 import 'package:wajbah_chef/features/Home/presentation/view/widgets/TextRich.dart';
 import 'package:wajbah_chef/features/detailed_request/presentation/view_model/timer_bloc.dart';
+import 'package:wajbah_chef/features/menu/data/model/menu_item.dart';
 
 class RequestsListItem extends StatefulWidget {
-  const RequestsListItem(
-      {Key? key,
-      required this.height,
-      required this.width,
-      required this.OrderId,
-      required this.Client_name,
-      required this.Client_location,
-      required this.Order_Price,
-      required this.Order_name,
-      required this.Order_item_count,
-      required this.Available_time,
-      required this.Condition,
-      required this.PhoneNumber,
-      required this.ItemDescription})
-      : super(key: key);
+  const RequestsListItem({
+    Key? key,
+    required this.height,
+    required this.width,
+    required this.OrderId,
+    required this.Client_name,
+    required this.Client_location,
+    required this.Order_Price,
+    required this.quantities,
+    required this.Available_time,
+    required this.Condition,
+    required this.PhoneNumber,
+    this.menuItems,
+  }) : super(key: key);
 
   final double height;
   final double width;
   final String OrderId;
-  final String Order_name;
-  final int Order_item_count;
+  final List<dynamic> quantities;
   final String Client_name;
   final String Client_location;
   final double Order_Price;
   final String Available_time;
   final String PhoneNumber;
   final String Condition;
-  final String ItemDescription;
+  final List<MenuItem>? menuItems;
 
   @override
   _RequestsListItemState createState() => _RequestsListItemState();
@@ -93,20 +93,18 @@ class _RequestsListItemState extends State<RequestsListItem> {
     timerbloc.add(StartTimer(availableTimeDuration));
 
     return InkWell(
-      
       onTap: () {
         Navigator.pushNamed(context, 'requestView',
             arguments: Request(
                 Request_ID: widget.OrderId,
-                Item_name: widget.Order_name,
-                num_of_items: widget.Order_item_count,
+                num_of_items: widget.quantities,
                 Requester_name: widget.Client_name,
                 Requester_location: widget.Client_location,
                 Item_price: widget.Order_Price,
                 Available_time: formattedTime,
                 Request_condition: widget.Condition,
                 Phone_number: widget.PhoneNumber,
-                item_Description: widget.ItemDescription));
+                widget.menuItems));
       },
       child: Container(
         height: widget.height * 0.3,
@@ -138,12 +136,13 @@ class _RequestsListItemState extends State<RequestsListItem> {
               SizedBox(
                 height: widget.height * 0.01,
               ),
-              CustomTextRich(
-                FirstColor: wajbah_green,
-                SecondColor: wajbah_black,
-                firstText: '${widget.Order_item_count} x ',
-                SecondText: widget.Order_name,
-              ),
+              for (int i = 0; i < widget.quantities.length; i++)
+                CustomTextRich(
+                  FirstColor: wajbah_green,
+                  SecondColor: wajbah_black,
+                  firstText: '${widget.quantities[i]} x ',
+                  SecondText: widget.menuItems?[i].name ?? "Menu Item name",
+                ),
               SizedBox(
                 height: widget.height * 0.02,
               ),

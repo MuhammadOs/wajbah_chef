@@ -1,52 +1,17 @@
-import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
 import 'package:wajbah_chef/features/menu/data/model/menu_item.dart';
 
-class StateModel {
-  int? statusCode;
-  bool? isSuccess;
-  List<String>? errorMessages;
-  StateResult? result;
-
-  StateModel({this.statusCode, this.isSuccess, this.errorMessages, this.result});
-
-  StateModel.fromJson(Map<String, dynamic> json) {
-    statusCode = json['statusCode'];
-    isSuccess = json['isSuccess'];
-    if (json['errorMessages'] != null) {
-      errorMessages = [];
-      json['errorMessages'].forEach((v) {
-        errorMessages!.add(v);
-      });
-    }
-    result = json['result'] != null ? StateResult.fromJson(json['result']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['statusCode'] = statusCode;
-    data['isSuccess'] = isSuccess;
-    if (errorMessages != null) {
-      data['errorMessages'] = errorMessages;
-    }
-    if (result != null) {
-      data['result'] = result!.toJson();
-    }
-    return data;
-  }
-}
-
-class StateResult {
+class Order {
   int? orderId;
   String? notes;
-  dynamic totalPrice;
-  dynamic subTotal;
-  dynamic deliveryFees;
+  double? totalPrice;
+  double? subTotal;
+  double? deliveryFees;
   int? deliveryNumber;
   String? createdOn;
   String? deliveryTime;
   String? status;
-  List<int>? quantities;
-  dynamic sizes;
+  List<dynamic>? quanitities;
+  List<dynamic>? sizes;
   String? copoun;
   bool? cashDelivered;
   String? estimatedTime;
@@ -58,8 +23,7 @@ class StateResult {
   String? fname;
   String? lname;
   String? address;
-
-  StateResult({
+  Order({
     this.orderId,
     this.notes,
     this.address,
@@ -72,7 +36,7 @@ class StateResult {
     this.createdOn,
     this.deliveryTime,
     this.status,
-    this.quantities,
+    this.quanitities,
     this.sizes,
     this.copoun,
     this.cashDelivered,
@@ -84,7 +48,7 @@ class StateResult {
     this.chefId,
   });
 
-  StateResult.fromJson(Map<String, dynamic> json) {
+  Order.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
     notes = json['notes'];
     totalPrice = json['totalPrice'];
@@ -97,7 +61,7 @@ class StateResult {
     createdOn = json['createdOn'];
     deliveryTime = json['deliveryTime'];
     status = json['status'];
-    quantities = json['quanitities'];
+    quanitities = json['quanitities'];
     sizes = json['sizes'];
     copoun = json['copoun'];
     cashDelivered = json['cashDelivered'];
@@ -128,7 +92,7 @@ class StateResult {
     data['createdOn'] = createdOn;
     data['deliveryTime'] = deliveryTime;
     data['status'] = status;
-    data['quanitities'] = quantities;
+    data['quanitities'] = quanitities;
     data['sizes'] = sizes;
     data['copoun'] = copoun;
     data['cashDelivered'] = cashDelivered;
@@ -140,30 +104,6 @@ class StateResult {
       data['menuItems'] = menuItems!.map((v) => v.toJson()).toList();
     }
     data['chefId'] = chefId;
-    return data;
-  }
-}
-
-
-
-class SizesPrices {
-  dynamic priceSmall;
-  dynamic priceMedium;
-  dynamic priceLarge;
-
-  SizesPrices({this.priceSmall, this.priceMedium, this.priceLarge});
-
-  SizesPrices.fromJson(Map<String, dynamic> json) {
-    priceSmall = json['priceSmall'];
-    priceMedium = json['priceMedium'];
-    priceLarge = json['priceLarge'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['priceSmall'] = priceSmall;
-    data['priceMedium'] = priceMedium;
-    data['priceLarge'] = priceLarge;
     return data;
   }
 }

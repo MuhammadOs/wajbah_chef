@@ -33,50 +33,46 @@ class _OnBoardingBodyState extends State<OnBoardingBody> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: width * 0.04, vertical: height * 0.1),
+        padding: EdgeInsets.symmetric(horizontal: width * 0.06),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: height * 0.62,
-              child: Padding(
-                padding: EdgeInsets.only(left: width * 0.03),
-                child: PageView.builder(
-                  onPageChanged: (index) {
-                    setState(() {
-                      // Check if the current page is the last page
-                      index == content.length - 1
-                          ? isLastPage = true
-                          : isLastPage = false;
-                    });
-                  },
-                  controller: controller,
-                  itemCount: content.length,
-                  itemBuilder: (context, index) {
-                    return PageViewBody(index: index);
-                  },
-                ),
+              height: height * 0.6,
+              child: PageView.builder(
+                onPageChanged: (index) {
+                  setState(() {
+                    // Check if the current page is the last page
+                    index == content.length - 1
+                        ? isLastPage = true
+                        : isLastPage = false;
+                  });
+                },
+                controller: controller,
+                itemCount: content.length,
+                itemBuilder: (context, index) {
+                  return PageViewBody(index: index);
+                },
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: height * 0.01, left: width * 0.03),
-              child: OnboardingDots(controller: controller),
+            OnboardingDots(controller: controller),
+            const SizedBox(
+              height: 20,
             ),
-            Expanded(
-              child: Padding(
-                padding:
-                    EdgeInsets.only(top: height * 0.05, right: width * 0.03),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    OnboardingRegisterSkipButton(
-                        isLastPage: isLastPage, controller: controller),
-                    isLastPage
-                        ? const OnboardingLoginButton()
-                        : CustomNextButton(controller: controller),
-                  ],
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 46.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+
+                children: [
+                  OnboardingRegisterSkipButton(
+                      isLastPage: isLastPage, controller: controller),
+                  isLastPage
+                      ? const OnboardingLoginButton()
+                      : CustomNextButton(controller: controller),
+                ],
               ),
             ),
           ],

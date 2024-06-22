@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wajbah_chef/features/Home/data/model/request_model.dart';
-
+import 'package:wajbah_chef/features/home/data/model/order_model.dart';
 import '../../../../../core/widgets/custom_appbar.dart';
 import '../../view_model/track_orders_cubit.dart';
 import '../../view_model/track_orders_state.dart';
@@ -22,9 +21,9 @@ class OrdersBody extends StatefulWidget {
 
 class _OrdersBodyState extends State<OrdersBody> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  List<Result> preparingOrders = [];
-  List<Result> cookingOrders = [];
-  List<Result> deliveringOrders = [];
+  List<Order> preparingOrders = [];
+  List<Order> cookingOrders = [];
+  List<Order> deliveringOrders = [];
 
   @override
   void initState() {

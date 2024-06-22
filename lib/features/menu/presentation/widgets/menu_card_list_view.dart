@@ -7,9 +7,8 @@ import 'menu_card.dart';
 
 class MenuCardListView extends StatelessWidget {
   final List<MenuItem> menuItems;
-  final bool isMyRoom;
 
-  const MenuCardListView(this.menuItems, {Key? key, this.isMyRoom = false})
+  const MenuCardListView(this.menuItems, {Key? key,})
       : super(key: key);
 
   @override
