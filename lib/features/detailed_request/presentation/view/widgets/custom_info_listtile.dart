@@ -36,9 +36,13 @@ class CustomInfoListtile extends StatelessWidget {
                 title,
                 style: Styles.hint.copyWith(fontSize: 12),
               ),
-              Text(
-                subtitle,
-                style: Styles.titleMedium.copyWith(fontSize: 16),
+              SizedBox(
+                width: 300,
+                child: Text(
+                  subtitle,
+                  style: Styles.titleMedium.copyWith(fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           )

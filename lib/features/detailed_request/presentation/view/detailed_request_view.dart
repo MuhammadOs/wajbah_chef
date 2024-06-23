@@ -14,7 +14,11 @@ class DetailedRequestView extends StatelessWidget {
         children: [
           const SizedBox(height: 40,),
           CustomAppBar(title: 'New Requests'),
-          const DetailedRequestBody(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: const DetailedRequestBody(),
+            ),
+          ),
         ],
       ),
     );

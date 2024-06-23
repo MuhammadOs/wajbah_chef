@@ -136,51 +136,64 @@ class _RequestsListItemState extends State<RequestsListItem> {
               SizedBox(
                 height: widget.height * 0.01,
               ),
-              for (int i = 0; i < widget.quantities.length; i++)
-                CustomTextRich(
-                  FirstColor: wajbah_green,
-                  SecondColor: wajbah_black,
-                  firstText: '${widget.quantities[i]} x ',
-                  SecondText: widget.menuItems?[i].name ?? "Menu Item name",
-                ),
-              SizedBox(
-                height: widget.height * 0.02,
-              ),
-              Row(
-                children: [
-                  const Iconify(
-                    Gg.profile,
-                    color: wajbah_green,
-                  ),
-                  SizedBox(
-                    width: widget.width * 0.01,
-                  ),
-                  Text(
-                    widget.Client_name,
-                    style: Styles.titleSmall.copyWith(fontSize: 13),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: widget.height * 0.01,
-              ),
-              Row(
-                children: [
-                  const Iconify(
-                    Ic.baseline_location_on,
-                    color: wajbah_green,
-                  ),
-                  SizedBox(
-                    width: widget.width * 0.01,
-                  ),
-                  Text(
-                    widget.Client_location,
-                    style: Styles.titleSmall.copyWith(fontSize: 13),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
+              if (widget.quantities.isNotEmpty)
+      CustomTextRich(
+        FirstColor: wajbah_green,
+        SecondColor: wajbah_black,
+        firstText: '${widget.quantities[0]} x ',
+        SecondText: widget.menuItems?[0].name ?? "Menu Item name",
+      ),
+    if (widget.quantities.length > 1)
+      Padding(
+        padding: EdgeInsets.only(top: widget.height * 0.01 , left:  widget.width * 0.02 ),
+        child: Text(
+          "More items =>",
+          style: Styles.titleSmall.copyWith(color: wajbah_gray),
+        ),
+      ),
+    SizedBox(
+      height: widget.height * 0.01,
+    ),
+    // Client name
+    Row(
+      children: [
+        const Iconify(
+          Gg.profile,
+          color: wajbah_green,
+        ),
+        SizedBox(
+          width: widget.width * 0.01,
+        ),
+        Text(
+          widget.Client_name,
+          style: Styles.titleSmall.copyWith(fontSize: 13),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+    SizedBox(
+      height: widget.height * 0.01,
+    ),
+    // Client location
+    Row(
+      children: [
+        const Iconify(
+          Ic.baseline_location_on,
+          color: wajbah_green,
+        ),
+        SizedBox(
+          width: widget.width * 0.01,
+        ),
+        Expanded(
+          child: Text(
+            widget.Client_location,
+            style: Styles.titleSmall.copyWith(fontSize: 13),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    ),
               SizedBox(
                 height: widget.height * 0.02,
               ),

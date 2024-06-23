@@ -26,7 +26,7 @@ class CustomTextRich extends StatelessWidget {
           TextSpan(
             text: SecondText, // Set the text for this part
             style:
-                Styles.titleMedium.copyWith(fontSize: 20, color: SecondColor),
+                Styles.titleMedium.copyWith(fontSize: 18, color: SecondColor),
           ),
         ],
       ),
