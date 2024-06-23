@@ -9,13 +9,17 @@ import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/teenyicons.dart';
 import 'package:wajbah_chef/core/sizeConfig.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
+import 'package:wajbah_chef/features/Dashboard/presentation/view/widgets/brand_view.dart';
+import 'package:wajbah_chef/features/Dashboard/presentation/view/widgets/finance_view.dart';
 import 'package:wajbah_chef/features/Dashboard/presentation/view/widgets/large_dashboard_container.dart';
+import 'package:wajbah_chef/features/Dashboard/presentation/view/widgets/operations_view.dart';
 import 'package:wajbah_chef/features/Dashboard/presentation/view/widgets/small_dashboard_container.dart';
 import 'package:wajbah_chef/features/brand/presentation/view/brand_view.dart';
 import 'package:wajbah_chef/features/market/presentation/view/market_view.dart';
 
 class DashBoardBody extends StatelessWidget {
-  const DashBoardBody({super.key});
+  const DashBoardBody({super.key, required this.chef_id});
+  final String chef_id;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +67,11 @@ class DashBoardBody extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context, 'financeView');
+                          Navigator.of(context).push(MaterialPageRoute(
+                        builder: (c) {
+                          return FinanceView(chef_id: chef_id,);
+                        },
+                      ));
                         } ,
                         child: SmallDashboardContainer(
                             height: height,
@@ -100,7 +108,7 @@ class DashBoardBody extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (c) {
-                              return const BrandView();
+                              return BrandingView(chef_id: chef_id,);
                             },
                           ));
                         },
@@ -116,12 +124,19 @@ class DashBoardBody extends StatelessWidget {
                   SizedBox(
                     height: height * 0.03,
                   ),
-                  LargeDashboardContainer(
-                    height: height,
-                    width: width,
-                    name: 'Operations',
-                    color: 0xffBF729B,
-                    icon: Teenyicons.adjust_horizontal_solid,
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+                          return OperationsView(chef_id: chef_id,);
+                        },));
+                    },
+                    child: LargeDashboardContainer(
+                      height: height,
+                      width: width,
+                      name: 'Operations',
+                      color: 0xffBF729B,
+                      icon: Teenyicons.adjust_horizontal_solid,
+                    ),
                   ),
                   SizedBox(
                     height: height * 0.03,

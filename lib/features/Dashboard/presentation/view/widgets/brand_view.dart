@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:wajbah_chef/core/widgets/custom_appbar.dart';
 
-class FinanceView extends StatefulWidget {
-  const FinanceView({Key? key, required this.chef_id}) : super(key: key);
+class BrandingView extends StatefulWidget {
+  const BrandingView({Key? key, required this.chef_id}) : super(key: key);
   final String chef_id;
 
   @override
-  State<FinanceView> createState() => _FinanceViewState();
+  State<BrandingView> createState() => _BrandingViewState();
 }
 
-class _FinanceViewState extends State<FinanceView> {
+class _BrandingViewState extends State<BrandingView> {
   late WebViewController _controller;
   late String _webviewLink;
   bool _isWebviewReady = false;
@@ -18,7 +18,7 @@ class _FinanceViewState extends State<FinanceView> {
   @override
   void initState() {
     super.initState();
-    _webviewLink = "https://lookerstudio.google.com/embed/u/0/reporting/0982ea8e-b4a3-4b2d-972f-858e0beb1faa/page/p_3hqiumqdid?params=%7B%22df76%22:%22include%25EE%2580%25800%25EE%2580%2580IN%25EE%2580%2580${widget.chef_id}%22%7D";
+    _webviewLink = "https://lookerstudio.google.com/embed/u/0/reporting/048f9c8b-79df-4ea2-96ed-7e5dc6085b4b/page/p_lvxtxnocid?params=%7B%22df33%22:%22include%25EE%2580%25800%25EE%2580%2580IN%25EE%2580%2580${widget.chef_id}%22%7D";
   }
 
   @override
@@ -28,7 +28,7 @@ class _FinanceViewState extends State<FinanceView> {
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(title: 'Finance'),
+            CustomAppBar(title: 'Branding'),
             Expanded(
               child: WebView(
                 initialUrl: _webviewLink,
